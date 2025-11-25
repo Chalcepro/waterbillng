@@ -2,6 +2,7 @@
 A smart water management solution designed specifically for Nigerian communities to streamline water bill payments, track consumption, and manage community water resources efficiently.
 
 Know more about the project at: http://waterbill.page.gd
+Official project webapp in: http://aterbill.free.nf
 
 ## Overview
 WaterBill NG is a comprehensive digital platform that addresses the challenges of water billing and management in Nigerian communities. The system provides real-time monitoring, payment tracking, and community performance analytics to ensure efficient water resource management.
