@@ -188,3 +188,10 @@ Development team for their dedication
 Test users for valuable insights
 
 WaterBill NG - Smart Water Management for Nigerian Communities
+
+
+
+
+## Note!!!
+Do note that the project is still under development and there are a large number of "test" files which are no longer needed
+Feel free to delete unwanted files to speed up your workflow
