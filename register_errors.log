@@ -1,0 +1,34 @@
+[31-Oct-2025 18:35:06 Europe/Berlin] Registration error: Method not allowed
+[31-Oct-2025 18:35:59 Europe/Berlin] Registration error: No input data received
+[31-Oct-2025 19:26:56 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function sendEmail(), 1 passed in C:\xampp\htdocs\waterbill\api\auth\register.php on line 168 and at least 3 expected in C:\xampp\htdocs\waterbill\api\includes\mailer.php:11
+Stack trace:
+#0 C:\xampp\htdocs\waterbill\api\auth\register.php(168): sendEmail(Array)
+#1 {main}
+  thrown in C:\xampp\htdocs\waterbill\api\includes\mailer.php on line 11
+[31-Oct-2025 19:29:54 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function sendEmail(), 1 passed in C:\xampp\htdocs\waterbill\api\auth\register.php on line 168 and at least 3 expected in C:\xampp\htdocs\waterbill\api\includes\mailer.php:11
+Stack trace:
+#0 C:\xampp\htdocs\waterbill\api\auth\register.php(168): sendEmail(Array)
+#1 {main}
+  thrown in C:\xampp\htdocs\waterbill\api\includes\mailer.php on line 11
+[31-Oct-2025 19:31:59 Europe/Berlin] PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\waterbill\api\includes\mailer.php on line 86
+[31-Oct-2025 19:31:59 Europe/Berlin] Failed to send email to glitchtrap1sonic@gmail.com: Welcome to WaterBill NG
+[31-Oct-2025 20:19:11 Europe/Berlin] PHP Warning:  mail(): SMTP server response: 530-5.7.0 Must issue a STARTTLS command first. For more information, go to
+530-5.7.0  https://support.google.com/a/answer/3221692 and review RFC 3207
+530 5.7.0 specifications. 98e67ed59e1d1-3407f29b59esm1616931a91.13 - gsmtp in C:\xampp\htdocs\waterbill\api\includes\mailer.php on line 86
+[31-Oct-2025 20:19:11 Europe/Berlin] Failed to send email to admin2@waterbill.ng: Welcome to WaterBill NG
+[01-Nov-2025 15:00:14 Europe/Berlin] PHP Warning:  mail(): SMTP server response: 530-5.7.0 Must issue a STARTTLS command first. For more information, go to
+530-5.7.0  https://support.google.com/a/answer/3221692 and review RFC 3207
+530 5.7.0 specifications. 5b1f17b1804b1-4773c374f84sm50289615e9.0 - gsmtp in C:\xampp\htdocs\waterbill\api\includes\mailer.php on line 86
+[01-Nov-2025 15:00:14 Europe/Berlin] Failed to send email to copycopy@gmail.com: Welcome to WaterBill NG
+[02-Nov-2025 12:46:38 America/New_York] Failed to send email to glitchrapsonic@gmail.com: Welcome to WaterBill NG
+[02-Nov-2025 17:53:40 America/New_York] Failed to send email to daygaming4k@gmail.com: Welcome to WaterBill NG
+[02-Nov-2025 23:06:24 America/New_York] Failed to send email to matthewchubiyojodomin@gmail.com: Welcome to WaterBill NG
+[03-Nov-2025 14:25:25 America/New_York] Failed to send email to benedictikor17@gmail.com: Welcome to WaterBill NG
+[06-Nov-2025 12:29:05 America/New_York] Failed to send email to ikennachurchill4@gmail.com: Welcome to WaterBill NG
+[09-Nov-2025 12:28:42 America/New_York] Registration error: Method not allowed
+[15-Nov-2025 10:52:53 America/New_York] Failed to send email to isaiahsokomba@gmail.com: Welcome to WaterBill NG
+[16-Nov-2025 06:14:03 America/New_York] Failed to send email to abdulshaqurhamzat2022@gmail.com: Welcome to WaterBill NG
+[16-Nov-2025 16:21:22 America/New_York] Failed to send email to ema81_70@yahoo.com: Welcome to WaterBill NG
+[17-Nov-2025 05:05:01 America/New_York] Failed to send email to evamlove1@gmail.com: Welcome to WaterBill NG
+[17-Nov-2025 10:36:56 America/New_York] Failed to send email to ritaeneokwanihe@gmail.com: Welcome to WaterBill NG
+[18-Nov-2025 04:03:31 America/New_York] Failed to send email to nkemkudechukwu@gmail.com: Welcome to WaterBill NG

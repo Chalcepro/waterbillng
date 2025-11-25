@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - WaterBill NG Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #11c0d4 0%, #039ed1 100%);
+            --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 0;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+        
+        /* Hide header on mobile */
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            body {
+                padding-top: 0;
+                padding-bottom: 60px; /* Space for mobile footer */
+            }
+            
+            /* Optimize form elements for mobile */
+            .form-control, .form-select, .form-check-input {
+                font-size: 16px; /* Prevents zoom on focus in mobile Safari */
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 10px;
+            }
+            
+            .settings-card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Show header only on desktop */
+        @media (min-width: 992px) {
+            body {
+                padding-top: 70px;
+            }
+        }
+        
+        /* Header Styling - Matches WaterBill NG Brand */
+        .navbar {
+            background: var(--gradient-secondary) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 32px;
+            margin-right: 10px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white !important;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 158, 209, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Settings Grid */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+        }
+        
+        .settings-card h3 {
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(3, 158, 209, 0.25);
+        }
+        
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .checkbox-group:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 0.75rem;
+            accent-color: var(--primary-color);
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        /* System Maintenance Section */
+        .maintenance-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .maintenance-btn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            background: white;
+            color: var(--secondary-color);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        
+        .maintenance-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+        
+        .maintenance-btn i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .settings-card {
+                padding: 1.25rem;
+            }
+            
+            .maintenance-actions {
+                gap: 0.75rem;
+            }
+            
+            .maintenance-btn {
+                padding: 0.875rem 1rem;
+            }
+        }
+        
+        /* Mobile Footer */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+        
+        .mobile-footer-item:hover {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .mobile-dropdown .dropdown-item.active,
+        .mobile-dropdown .dropdown-item:active {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .mobile-dropdown .dropdown-divider {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Header - Only visible on desktop -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+                <span>WaterBill NG</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="fas fa-users me-1"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="payments.html">
+                            <i class="fas fa-credit-card me-1"></i> Payments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="fas fa-chart-bar me-1"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="notifications.html">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4 main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1>System Settings</h1>
+                    <p class="text-muted mb-0">Manage your WaterBill NG system configuration</p>
+                </div>
+                <button class="btn btn-outline-primary" id="refreshSettings">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings Grid -->
+        <div class="settings-grid">
+            <!-- General Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-cog me-2"></i>General Settings</h3>
+                <form id="generalSettings">
+                    <div class="form-group">
+                        <label class="form-label" for="companyName">Company Name</label>
+                        <input type="text" class="form-control" id="companyName" name="company_name" value="WaterBill NG">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="supportEmail">Support Email</label>
+                        <input type="email" class="form-control" id="supportEmail" name="support_email" value="info@waterbill.ng.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="currency">Currency</label>
+                        <select class="form-select" id="currency" name="currency">
+                            <option value="NGN">Nigerian Naira (₦)</option>
+                            <option value="USD">US Dollar ($)</option>
+                            <option value="EUR">Euro (€)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Payment Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-credit-card me-2"></i>Payment Settings</h3>
+                <form id="paymentSettings">
+                    <div class="form-group">
+                        <label class="form-label" for="minPayment">Minimum Payment Amount</label>
+                        <input type="number" class="form-control" id="minPayment" name="min_payment" value="2000" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Accepted Payment Methods</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="paystack" name="payment_methods[]" value="paystack" checked>
+                            <label for="paystack">Paystack</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="bank_transfer" name="payment_methods[]" value="bank_transfer" checked>
+                            <label for="bank_transfer">Bank Transfer</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="cash" name="payment_methods[]" value="cash">
+                            <label for="cash">Cash Payment</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="autoApproval" name="auto_approval" checked>
+                            <label for="autoApproval">Auto-approve payments</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Notification Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-bell me-2"></i>Notification Settings</h3>
+                <form id="notificationSettings">
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="emailNotifications" name="email_notifications" checked>
+                            <label for="emailNotifications">Email Notifications</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="smsNotifications" name="sms_notifications">
+                            <label for="smsNotifications">SMS Notifications</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="reminderDays">Payment Reminder (days before due)</label>
+                        <input type="number" class="form-control" id="reminderDays" name="reminder_days" value="3" min="1" max="30">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+            
+            <!-- System Maintenance -->
+            <div class="settings-card">
+                <h3><i class="fas fa-tools me-2"></i>System Maintenance</h3>
+                <div class="maintenance-actions">
+                    <button type="button" class="maintenance-btn" onclick="clearCache()">
+                        <i class="fas fa-broom"></i>
+                        <div>
+                            <div class="fw-semibold">Clear System Cache</div>
+                            <small class="text-muted">Remove temporary files and refresh system data</small>
+                        </div>
+                    </button>
+                    
+                    <button type="button" class="maintenance-btn" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        <div>
+                            <div class="fw-semibold">Export Data</div>
+                            <small class="text-muted">Download system data for backup or analysis</small>
+                        </div>
+                    </button>
+                    
+                    <button type="button" class="maintenance-btn" onclick="viewLogs()">
+                        <i class="fas fa-clipboard-list"></i>
+                        <div>
+                            <div class="fw-semibold">View System Logs</div>
+                            <small class="text-muted">Check system activity and error logs</small>
+                        </div>
+                    </button>
+                    
+                    <button type="button" class="maintenance-btn" onclick="backupDatabase()">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <div class="fw-semibold">Backup Database</div>
+                            <small class="text-muted">Create a complete database backup</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#reports"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="payments.html"><i class="fas fa-list me-2"></i>All Payments</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=approved"><i class="fas fa-check-circle me-2"></i>Approved</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=rejected"><i class="fas fa-times-circle me-2"></i>Rejected</a></li>
+        </ul>
+
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item active" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-file-alt me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../../assets/js/notify.js"></script>
+    
+    <script>
+        // Initialize the page when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication
+    if (!checkAdminAuth()) {
+        return;
+    }
+    
+    // Set up event listeners
+    setupEventListeners();
+    
+    // Load settings from localStorage
+    loadSettings();
+});
+
+// Simple authentication check - temporarily bypassed
+function checkAdminAuth() {
+    console.log('Authentication temporarily disabled for development');
+    return true; // Always return true for now
+}
+
+// Set up event listeners
+function setupEventListeners() {
+    // General Settings Form
+    const generalForm = document.getElementById('generalSettings');
+    if (generalForm) {
+        generalForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveGeneralSettings();
+        });
+    }
+
+    // Payment Settings Form
+    const paymentForm = document.getElementById('paymentSettings');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            savePaymentSettings();
+        });
+    }
+
+    // Notification Settings Form
+    const notificationForm = document.getElementById('notificationSettings');
+    if (notificationForm) {
+        notificationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveNotificationSettings();
+        });
+    }
+
+    // Refresh Settings Button
+    const refreshBtn = document.getElementById('refreshSettings');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            loadSettings();
+        });
+    }
+}
+
+// Load settings from localStorage
+function loadSettings() {
+    try {
+        const settings = JSON.parse(localStorage.getItem('waterbillSettings') || '{}');
+        
+        console.log('Loaded settings:', settings);
+        
+        // Apply settings to form fields with fallbacks
+        document.getElementById('companyName').value = settings.company_name || 'WaterBill NG';
+        document.getElementById('supportEmail').value = settings.support_email || 'info@waterbill.ng.com';
+        document.getElementById('currency').value = settings.currency || 'NGN';
+        document.getElementById('minPayment').value = settings.min_payment || '2000';
+        
+        // Payment methods
+        const paymentMethods = settings.payment_methods || ['paystack', 'bank_transfer'];
+        document.getElementById('paystack').checked = paymentMethods.includes('paystack');
+        document.getElementById('bank_transfer').checked = paymentMethods.includes('bank_transfer');
+        document.getElementById('cash').checked = paymentMethods.includes('cash');
+        
+        document.getElementById('autoApproval').checked = settings.auto_approval !== false;
+        document.getElementById('emailNotifications').checked = settings.email_notifications !== false;
+        document.getElementById('smsNotifications').checked = settings.sms_notifications || false;
+        document.getElementById('reminderDays').value = settings.reminder_days || '3';
+        
+        showNotification('Settings loaded successfully', 'success');
+
+    } catch (error) {
+        console.error('Error loading settings:', error);
+        applyDefaultSettings();
+        showNotification('Using default settings', 'info');
+    }
+}
+
+// Apply default settings
+function applyDefaultSettings() {
+    document.getElementById('companyName').value = 'WaterBill NG';
+    document.getElementById('supportEmail').value = 'info@waterbill.ng.com';
+    document.getElementById('currency').value = 'NGN';
+    document.getElementById('minPayment').value = '2000';
+    document.getElementById('paystack').checked = true;
+    document.getElementById('bank_transfer').checked = true;
+    document.getElementById('cash').checked = false;
+    document.getElementById('autoApproval').checked = true;
+    document.getElementById('emailNotifications').checked = true;
+    document.getElementById('smsNotifications').checked = false;
+    document.getElementById('reminderDays').value = '3';
+}
+
+// Save general settings to localStorage
+function saveGeneralSettings() {
+    const form = document.getElementById('generalSettings');
+    if (!form) return;
+
+    const formData = new FormData(form);
+    const formValues = Object.fromEntries(formData.entries());
+    
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+        // Load existing settings
+        const existingSettings = JSON.parse(localStorage.getItem('waterbillSettings') || '{}');
+        
+        // Update with new values
+        const updatedSettings = {
+            ...existingSettings,
+            company_name: formValues.company_name,
+            support_email: formValues.support_email,
+            currency: formValues.currency
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('waterbillSettings', JSON.stringify(updatedSettings));
+        
+        showNotification('General settings saved successfully', 'success');
+        
+    } catch (error) {
+        console.error('Error saving general settings:', error);
+        showNotification('Failed to save general settings', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save me-1"></i> Save Changes';
+    }
+}
+
+// Save payment settings to localStorage
+function savePaymentSettings() {
+    const form = document.getElementById('paymentSettings');
+    if (!form) return;
+
+    const formData = new FormData(form);
+    
+    // Get checkbox values
+    const paymentMethods = [];
+    if (document.getElementById('paystack').checked) paymentMethods.push('paystack');
+    if (document.getElementById('bank_transfer').checked) paymentMethods.push('bank_transfer');
+    if (document.getElementById('cash').checked) paymentMethods.push('cash');
+    
+    const formValues = {
+        min_payment: formData.get('min_payment'),
+        payment_methods: paymentMethods,
+        auto_approval: document.getElementById('autoApproval').checked
+    };
+    
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+        // Load existing settings
+        const existingSettings = JSON.parse(localStorage.getItem('waterbillSettings') || '{}');
+        
+        // Update with new values
+        const updatedSettings = {
+            ...existingSettings,
+            min_payment: formValues.min_payment,
+            payment_methods: formValues.payment_methods,
+            auto_approval: formValues.auto_approval
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('waterbillSettings', JSON.stringify(updatedSettings));
+        
+        // Also save to a separate key for easy access
+        localStorage.setItem('minPaymentAmount', formValues.min_payment);
+        
+        // Save to database via API
+        saveMinPaymentToDatabase(formValues.min_payment);
+        
+        showNotification('Payment settings saved successfully', 'success');
+        
+    } catch (error) {
+        console.error('Error saving payment settings:', error);
+        showNotification('Failed to save payment settings', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save me-1"></i> Save Changes';
+    }
+}
+
+// Save minimum payment to database
+async function saveMinPaymentToDatabase(minPayment) {
+    try {
+        const response = await fetch('/waterbill/api/admin/save-payment-settings.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                min_payment_amount: minPayment
+            }),
+            credentials: 'include'
+        });
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            console.error('Failed to save to database:', result.message);
+        }
+    } catch (error) {
+        console.error('Error saving to database:', error);
+    }
+}
+
+
+// Save notification settings to localStorage
+function saveNotificationSettings() {
+    const form = document.getElementById('notificationSettings');
+    if (!form) return;
+
+    const formData = new FormData(form);
+    const formValues = {
+        email_notifications: document.getElementById('emailNotifications').checked,
+        sms_notifications: document.getElementById('smsNotifications').checked,
+        reminder_days: formData.get('reminder_days')
+    };
+    
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+        // Load existing settings
+        const existingSettings = JSON.parse(localStorage.getItem('waterbillSettings') || '{}');
+        
+        // Update with new values
+        const updatedSettings = {
+            ...existingSettings,
+            email_notifications: formValues.email_notifications,
+            sms_notifications: formValues.sms_notifications,
+            reminder_days: formValues.reminder_days
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('waterbillSettings', JSON.stringify(updatedSettings));
+        
+        showNotification('Notification settings saved successfully', 'success');
+        
+    } catch (error) {
+        console.error('Error saving notification settings:', error);
+        showNotification('Failed to save notification settings', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save me-1"></i> Save Changes';
+    }
+}
+
+// System maintenance functions
+function clearCache() {
+    if (!confirm('Are you sure you want to clear the system cache? This will remove temporary files and refresh system data.')) {
+        return;
+    }
+
+    try {
+        localStorage.removeItem('waterbillSettings');
+        showNotification('System cache cleared successfully', 'success');
+    } catch (error) {
+        console.error('Error clearing cache:', error);
+        showNotification('Failed to clear cache', 'error');
+    }
+}
+
+function exportData() {
+    try {
+        const settings = JSON.parse(localStorage.getItem('waterbillSettings') || '{}');
+        const dataStr = JSON.stringify(settings, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `waterbill_settings_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        showNotification('Settings exported to JSON file', 'success');
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        showNotification('Failed to export data', 'error');
+    }
+}
+
+function viewLogs() {
+    showNotification('System logs feature coming soon!', 'info');
+}
+
+function backupDatabase() {
+    showNotification('Database backup feature coming soon!', 'info');
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    // Use Bootstrap alerts for notifications
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 80px; right: 20px; z-index: 1050; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alertDiv);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = '../auth/login.html';
+}
+    </script>
+</body>
+</html>

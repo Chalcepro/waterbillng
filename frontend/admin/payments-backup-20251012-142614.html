@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments - WaterBill NG Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 70px;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 4px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white !important;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        
+        .table {
+            background: white;
+        }
+        
+        .table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border: none;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Responsive Admin Header -->
+    <div id="admin-header">
+        <!-- Header will be loaded here -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">Payment Management</h1>
+            <button class="btn btn-primary" id="exportButton">
+                <i class="fas fa-download me-1"></i> Export
+            </button>
+        </div>
+
+        <!-- Filters Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Status</label>
+                        <select id="statusFilter" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                            <option value="verification_pending">Verification Pending</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Payment Method</label>
+                        <select id="methodFilter" class="form-select">
+                            <option value="">All Methods</option>
+                            <option value="paystack">Paystack</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="manual_upload">Manual Upload</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Date From</label>
+                        <input type="date" class="form-control" id="dateFrom">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To</label>
+                        <input type="date" class="form-control" id="dateTo">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button id="filterButton" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i> Apply
+                        </button>
+                        <button id="resetButton" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo me-1"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">All Payments</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Reference</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table">
+                            <!-- Payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Payments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Export Format</label>
+                        <select id="exportFormat" class="form-select">
+                            <option value="csv">CSV</option>
+                            <option value="excel">Excel</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date Range</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">From</span>
+                            <input type="date" id="exportDateFrom" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">To</span>
+                            <input type="date" id="exportDateTo" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmExport" class="btn btn-primary">
+                        <i class="fas fa-download me-1"></i> Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Details Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Payment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="paymentDetails">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="receiptPreview" class="text-center mb-3 d-none">
+                    <h6>Payment Receipt</h6>
+                    <div class="mb-3" style="max-height: 500px; overflow-y: auto;">
+                        <iframe id="receiptFrame" class="w-100 rounded" style="height: 100%; min-height: 400px; border: 1px solid #dee2e6; background: #f8f9fa;"></iframe>
+                    </div>
+                    <a id="downloadReceipt" href="#" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-download me-1"></i> Download Receipt
+                    </a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="approveBtn" class="btn btn-success d-none">
+                        <i class="fas fa-check me-1"></i> Approve
+                    </button>
+                    <button type="button" id="rejectBtn" class="btn btn-danger d-none">
+                        <i class="fas fa-times me-1"></i> Reject
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../assets/js/notify.js"></script>
+    <script src="../assets/js/auth-guard.js"></script>
+    
+    <script>
+        // Global variables
+        let currentPaymentId = null;
+        let exportModal = null;
+        let paymentModal = null;
+
+        // Main initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize modals
+            exportModal = new bootstrap.Modal(document.getElementById('exportModal'));
+            paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+
+            // Check authentication
+            if (window.AuthGuard) {
+                const session = await AuthGuard.requireAdmin();
+                if (!session) return;
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Load initial data
+            await loadPayments();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Filter button
+            const filterBtn = document.getElementById('filterButton');
+            if (filterBtn) {
+                filterBtn.addEventListener('click', filterPayments);
+            }
+
+            // Reset button
+            const resetBtn = document.getElementById('resetButton');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', resetFilters);
+            }
+
+            // Export button
+            const exportBtn = document.getElementById('exportButton');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', () => exportModal.show());
+            }
+
+            // Confirm export
+            const confirmExportBtn = document.getElementById('confirmExport');
+            if (confirmExportBtn) {
+                confirmExportBtn.addEventListener('click', exportPayments);
+            }
+
+            // Payment action buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.view-payment')) {
+                    e.preventDefault();
+                    const paymentId = e.target.closest('.view-payment').dataset.paymentId;
+                    viewPayment(paymentId);
+                } else if (e.target.closest('.approve-payment')) {
+                    e.preventDefault();
+                    const paymentId = e.target.closest('.approve-payment').dataset.paymentId;
+                    updatePaymentStatus(paymentId, 'completed');
+                } else if (e.target.closest('.reject-payment')) {
+                    e.preventDefault();
+                    const paymentId = e.target.closest('.reject-payment').dataset.paymentId;
+                    updatePaymentStatus(paymentId, 'failed');
+                }
+            });
+        }
+
+        // Load payments from the database
+        async function loadPayments(filters = {}) {
+            // Show loading state
+            const tableBody = document.getElementById('payments-table');
+            if (tableBody) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>`;
+            }
+
+            try {
+                // Build query parameters
+                const params = new URLSearchParams();
+                if (filters.status) params.append('status', filters.status);
+                if (filters.method) params.append('method', filters.method);
+                if (filters.dateFrom) params.append('dateFrom', filters.dateFrom);
+                if (filters.dateTo) params.append('dateTo', filters.dateTo);
+
+                // Fetch payments from the API
+                const response = await fetch(`/waterbill/api/admin/payments-list.php?${params.toString()}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load payments');
+                }
+
+                // Process the response data
+                const payments = Array.isArray(data.payments) ? data.payments : [];
+                
+                // Apply any additional client-side filtering
+                let filteredPayments = [...payments];
+                
+                if (filters.status) {
+                    if (filters.status === 'verification_pending') {
+                        filteredPayments = filteredPayments.filter(p => 
+                            p.status === 'pending' && p.payment_method === 'manual_upload'
+                        );
+                    } else {
+                        filteredPayments = filteredPayments.filter(p => p.status === filters.status);
+                    }
+                }
+                
+                if (filters.method) {
+                    filteredPayments = filteredPayments.filter(p => p.payment_method === filters.method);
+                }
+                
+                if (filters.dateFrom) {
+                    const fromDate = new Date(filters.dateFrom);
+                    filteredPayments = filteredPayments.filter(p => new Date(p.created_at) >= fromDate);
+                }
+                
+                if (filters.dateTo) {
+                    const toDate = new Date(filters.dateTo);
+                    toDate.setHours(23, 59, 59, 999); // End of the day
+                    filteredPayments = filteredPayments.filter(p => new Date(p.created_at) <= toDate);
+                }
+                
+                // Check if we have any payments to display
+                if (filteredPayments.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    No payments found matching your criteria.
+                                </div>
+                            </td>
+                        </tr>`;
+                    return [];
+                }
+
+                // Sort by date (newest first) - if created_at exists
+                if (filteredPayments[0].created_at) {
+                    filteredPayments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                }
+
+                // Render the payments
+                renderPayments(filteredPayments);
+
+                return filteredPayments;
+            } catch (error) {
+                console.error('Error loading payments:', error);
+                const errorRow = document.createElement('tr');
+                errorRow.innerHTML = `
+                    <td colspan="8" class="text-center text-danger py-4">
+                        Failed to load payments. Please try again.
+                    </td>`;
+                tableBody.innerHTML = '';
+                tableBody.appendChild(errorRow);
+            }
+        }
+
+        function renderPayments(payments) {
+            const tbody = document.getElementById('payments-table');
+            if (!tbody || !payments || !Array.isArray(payments)) {
+                console.error('Invalid payments data or table element');
+                return;
+            }
+            
+            // Clear existing rows
+            tbody.innerHTML = '';
+
+            try {
+                const rows = payments.map(payment => {
+                    if (!payment) return '';
+                    
+                    // Get user name from the API response
+                    const userName = payment.user || `User#${payment.user_id || 'N/A'}`;
+                    
+                    // Format date and time
+                    const paymentDate = payment.date ? new Date(payment.date).toLocaleDateString() : 'N/A';
+                    const paymentTime = payment.time || '';
+                    
+                    // Get payment method from the API response
+                    const paymentMethod = payment.method || 'N/A';
+                    
+                    // Determine status and verification state
+                    const isPendingVerification = payment.status === 'pending' && payment.method && 
+                                               (payment.method.toLowerCase().includes('manual') || 
+                                                payment.method.toLowerCase() === 'upload');
+                    const statusClass = isPendingVerification ? 'bg-warning' : getStatusBadgeClass(payment.status);
+                    const statusText = isPendingVerification ? 'Verification Pending' : formatStatus(payment.status);
+                    
+                    return `
+                        <tr>
+                            <td>#${payment.id || 'N/A'}</td>
+                            <td>${userName}</td>
+                            <td>₦${payment.amount ? parseFloat(payment.amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</td>
+                            <td>${payment.reference || 'N/A'}</td>
+                            <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            <td>${paymentMethod}</td>
+                            <td>${paymentDate} ${paymentTime ? 'at ' + paymentTime : ''}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary view-payment" data-payment-id="${payment.id}">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>`;
+                }).join('');
+                
+                tbody.innerHTML = rows;
+            } catch (error) {
+                console.error('Error rendering payments:', error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-danger py-4">
+                            Error displaying payments. Please try again.
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'completed': return 'bg-success';
+                case 'pending': return 'bg-warning';
+                case 'failed': return 'bg-danger';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function formatStatus(status) {
+            return status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown';
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('methodFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            loadPayments();
+        }
+
+        // Payment actions
+        async function viewPayment(paymentId) {
+            const modal = document.getElementById('paymentModal');
+            if (!modal) return;
+            
+            const modalTitle = modal.querySelector('.modal-title');
+            const modalBody = document.getElementById('paymentDetails');
+            const receiptPreview = document.getElementById('receiptPreview');
+            const approveBtn = document.getElementById('approveBtn');
+            const rejectBtn = document.getElementById('rejectBtn');
+            
+            if (!modalTitle || !modalBody || !receiptPreview || !approveBtn || !rejectBtn) return;
+
+            // Reset receipt preview
+            receiptPreview.classList.add('d-none');
+            
+            // Show loading
+            modalBody.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>`;
+
+            try {
+                // Fetch payment details from API
+                const response = await fetch(`/waterbill/api/admin/get-payment.php?id=${paymentId}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load payment details');
+                }
+
+                const payment = data.payment;
+                
+                if (!payment) {
+                    throw new Error('Payment not found');
+                }
+                
+                // Process and display the payment details
+                displayPaymentDetails(payment, modalTitle, modalBody, receiptPreview, approveBtn, rejectBtn);
+                
+                // Show the modal
+                const paymentModal = new bootstrap.Modal(modal);
+                paymentModal.show();
+                
+            } catch (error) {
+                console.error('Error loading payment details:', error);
+                modalBody.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Failed to load payment details. Please try again.
+                    </div>`;
+                
+                // Show the modal with error message
+                const paymentModal = new bootstrap.Modal(modal);
+                paymentModal.show();
+            }
+        }
+        
+        // Helper function to display payment details
+        function displayPaymentDetails(payment, modalTitle, modalBody, receiptPreview, approveBtn, rejectBtn) {
+            // Store payment ID in a variable to avoid reference issues
+            const currentPaymentId = payment.id;
+            
+            // Set modal title
+            modalTitle.textContent = `Payment #${currentPaymentId}`;
+            
+            // Determine status text and badge
+            const isPendingVerification = payment.status === 'pending' && payment.payment_method === 'manual_upload';
+            const statusText = isPendingVerification ? 'Verification Pending' : 
+                             payment.status === 'completed' ? 'Completed' : 
+                             payment.status === 'failed' ? 'Failed' : 'Pending';
+            
+            const statusBadge = `<span class="badge ${isPendingVerification ? 'bg-warning' : getStatusBadgeClass(payment.status)}">${statusText}</span>`;
+
+                // Show receipt if available for manual uploads
+                if (payment.payment_method === 'manual_upload' && payment.receipt_url) {
+                    receiptPreview.classList.remove('d-none');
+                    const receiptFrame = document.getElementById('receiptFrame');
+                    const downloadLink = document.getElementById('downloadReceipt');
+                    
+                    // Set the iframe source with a proper viewer for PDFs
+                    if (payment.receipt_url.endsWith('.pdf')) {
+                        receiptFrame.src = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + payment.receipt_url)}&embedded=true`;
+                    } else {
+                        receiptFrame.src = payment.receipt_url;
+                    }
+                    
+                    downloadLink.href = payment.receipt_url;
+                    downloadLink.download = `receipt-${payment.id}.${payment.receipt_url.split('.').pop()}`;
+                }
+
+                modalBody.innerHTML = `
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Payment Details</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Amount:</th>
+                                    <td>₦${parseFloat(payment.amount).toLocaleString()}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>${statusBadge}</td>
+                                </tr>
+                                <tr>
+                                    <th>Reference:</th>
+                                    <td>${payment.reference || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Transaction ID:</th>
+                                    <td>${payment.transaction_id || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Method:</th>
+                                    <td>${payment.payment_method ? payment.payment_method.charAt(0).toUpperCase() + payment.payment_method.slice(1).replace('_', ' ') : 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date:</th>
+                                    <td>${new Date(payment.created_at).toLocaleString()}</td>
+                                </tr>
+                                ${payment.payment_date ? `
+                                <tr>
+                                    <th>Payment Date:</th>
+                                    <td>${payment.payment_date}</td>
+                                </tr>` : ''}
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>User Details</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Name:</th>
+                                    <td>${payment.user_name || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email:</th>
+                                    <td>${payment.user_email || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone:</th>
+                                    <td>${payment.user_phone || 'N/A'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Description</h6>
+                        <p class="mb-0">${payment.description || 'No description provided.'}</p>
+                    </div>`;
+
+                // Show/hide action buttons based on status and payment method
+                if (payment.status === 'pending') {
+                    approveBtn.classList.remove('d-none');
+                    rejectBtn.classList.remove('d-none');
+                    
+                    // Update button text for manual uploads
+                    if (payment.payment_method === 'manual_upload') {
+                        approveBtn.innerHTML = '<i class="fas fa-check me-1"></i> Verify & Approve';
+                        rejectBtn.innerHTML = '<i class="fas fa-times me-1"></i> Reject';
+                    } else {
+                        approveBtn.innerHTML = '<i class="fas fa-check me-1"></i> Approve';
+                        rejectBtn.innerHTML = '<i class="fas fa-times me-1"></i> Reject';
+                    }
+                    
+                    approveBtn.onclick = () => updatePaymentStatus(currentPaymentId, 'completed');
+                    rejectBtn.onclick = () => updatePaymentStatus(currentPaymentId, 'failed');
+                } else {
+                    approveBtn.classList.add('d-none');
+                    rejectBtn.classList.add('d-none');
+                }
+
+                // The modal is already shown in the viewPayment function
+                // No need to show it again here
+        }
+
+        // Check if auto-approval is enabled for non-manual payments
+        async function shouldAutoApprove(paymentMethod) {
+            if (paymentMethod === 'manual_upload') return false;
+            
+            try {
+                // In a real app, fetch this from your API
+                // const response = await fetch('/api/admin/settings/payment');
+                // const settings = await response.json();
+                // return settings.autoApprovePayments !== false;
+                
+                // For demo, default to true
+                return true;
+            } catch (error) {
+                console.error('Error checking auto-approval setting:', error);
+                return true; // Default to auto-approve if there's an error
+            }
+        }
+        
+        async function updatePaymentStatus(paymentId, status, paymentMethod = null) {
+            if (!paymentId || !status) return;
+            
+            // If this is a new payment and auto-approval is enabled for this payment method
+            if (status === 'pending' && paymentMethod && paymentMethod !== 'manual_upload') {
+                const autoApprove = await shouldAutoApprove(paymentMethod);
+                if (autoApprove) {
+                    status = 'completed';
+                }
+            }
+            
+            try {
+                // In a real app, make API call to update payment status
+                // const response = await fetch('../../api/admin/update-payment-status.php', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     credentials: 'include',
+                //     body: JSON.stringify({
+                //         paymentId,
+                //         status
+                //     })
+                // });
+                
+                // const data = await response.json();
+                
+                // Mock success response
+                const data = { success: true };
+                
+                if (data.success) {
+                    // Show success message
+                    if (window.notify) {
+                        notify.success(`Payment ${status} successfully`);
+                    }
+                    
+                    // Close modal if open
+                    if (paymentModal) {
+                        paymentModal.hide();
+                    }
+                    
+                    // Reload payments
+                    await loadPayments();
+                } else {
+                    throw new Error(data.message || 'Failed to update payment status');
+                }
+            } catch (error) {
+                console.error('Error updating payment status:', error);
+                if (window.notify) {
+                    notify.error(error.message || 'Failed to update payment status');
+                }
+            }
+        }
+
+        // Export functionality
+        async function exportPayments() {
+            const format = document.getElementById('exportFormat')?.value || 'csv';
+            const dateFrom = document.getElementById('exportDateFrom')?.value;
+            const dateTo = document.getElementById('exportDateTo')?.value;
+            
+            try {
+                // Show loading state
+                const confirmExportBtn = document.getElementById('confirmExport');
+                const originalText = confirmExportBtn?.innerHTML;
+                if (confirmExportBtn) {
+                    confirmExportBtn.disabled = true;
+                    confirmExportBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Exporting...
+                    `;
+                }
+                
+                // In a real app, make API call to export payments
+                // const params = new URLSearchParams();
+                // if (dateFrom) params.append('date_from', dateFrom);
+                // if (dateTo) params.append('date_to', dateTo);
+                // if (format) params.append('format', format);
+                
+                // const response = await fetch(`../../api/admin/export-payments.php?${params.toString()}`, {
+                //     credentials: 'include'
+                // });
+                
+                // Mock export - simulate download
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Create a mock download
+                const blob = new Blob(['Mock export data'], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `payments_${new Date().toISOString().split('T')[0]}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                // Close the modal
+                if (exportModal) {
+                    exportModal.hide();
+                }
+                
+                // Show success message
+                if (window.notify) {
+                    notify.success('Export completed successfully');
+                }
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                if (window.notify) {
+                    notify.error(error.message || 'Failed to export payments');
+                }
+            } finally {
+                // Reset export button
+                const confirmExportBtn = document.getElementById('confirmExport');
+                if (confirmExportBtn) {
+                    confirmExportBtn.disabled = false;
+                    confirmExportBtn.innerHTML = `<i class="fas fa-download me-1"></i> Export`;
+                }
+            }
+        }
+
+        // Filter functionality
+        function filterPayments() {
+            const status = document.getElementById('statusFilter')?.value;
+            const method = document.getElementById('methodFilter')?.value;
+            const dateFrom = document.getElementById('dateFrom')?.value;
+            const dateTo = document.getElementById('dateTo')?.value;
+            
+            // Reload payments with filters
+            loadPayments({ status, method, dateFrom, dateTo });
+        }
+
+    <script>
+    // Load responsive admin header
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load header
+        fetch('/waterbill/frontend/includes/admin-header-responsive.html')
+            .then(response => response.text())
+            .then(html => {
+                const header = document.getElementById('admin-header');
+                if (header) {
+                    header.innerHTML = html;
+                    
+                    // Highlight current menu item
+                    const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage || 
+                            (currentPage.includes(href.replace('.html', '')) && href !== '#')) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading header:', error));
+            
+        // Initialize payment management functionality
+        setupEventListeners();
+        loadPayments();
+    });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,44 @@
+<style>
+  /* Admin Header Shared Styles */
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #2e6fff, #1a2746);
+    color: #fff;
+    padding: 0 16px;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .admin-header .header-left { display: flex; align-items: center; gap: 12px; }
+  .admin-header .logo { width: 32px; height: 32px; border-radius: 6px; }
+  .admin-header .admin-title { font-weight: 700; letter-spacing: .5px; }
+  .admin-header .hamburger { background: none; border: 0; color: #fff; font-size: 1.4rem; padding: 6px; cursor: pointer; }
+
+  .header-nav { display: none; gap: 8px; align-items: center; }
+  .nav-link { display: flex; align-items: center; gap: 6px; padding: 8px 12px; color: rgba(255,255,255,0.9); text-decoration: none; border-radius: 6px; font-size: .9rem; font-weight: 500; transition: all .2s; border: 0; background: none; cursor: pointer; }
+  .nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav-link.active { background: rgba(255,255,255,0.15); color: #fff; }
+  .nav-link i { font-size: .85rem; }
+  .logout-btn { margin-left: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 16px; }
+
+  @media (min-width: 768px) { .header-nav { display: flex; } .hamburger { display: none; } }
+</style>
+
+<header class="admin-header">
+  <div class="header-left">
+    <img src="../assets/logo.png" alt="WaterBill NG Logo" class="logo">
+    <span class="admin-title">Admin</span>
+  </div>
+  <nav class="header-nav">
+    <a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+    <a href="users.html" class="nav-link"><i class="fas fa-users"></i><span>Users</span></a>
+    <a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i><span>Payments</span></a>
+    <a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+    <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span>Settings</span></a>
+    <button class="nav-link logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></button>
+  </nav>
+  <button class="hamburger" id="menu-btn" aria-label="Open Menu"><i class="fas fa-bars"></i></button>
+</header>

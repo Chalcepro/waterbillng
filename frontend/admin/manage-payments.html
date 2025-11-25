@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Payments - WaterBill NG Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 0;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+            padding-top: 70px; /* For desktop header */
+        }
+        
+        /* Hide desktop header on mobile */
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            
+            body {
+                padding-top: 0;
+                padding-bottom: 70px; /* Space for mobile footer */
+            }
+            
+            .main-content {
+                padding-top: 1rem;
+            }
+            
+            /* Optimize form elements for mobile */
+            .form-control, .form-select, .form-check-input {
+                font-size: 16px; /* Prevents zoom on focus in mobile Safari */
+            }
+            
+            /* Adjust table for mobile */
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* Adjust card padding */
+            .card {
+                margin: 0 -15px;
+                border-left: none;
+                border-right: none;
+                border-radius: 0;
+            }
+            
+            .card-header {
+                padding: 0.75rem 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            /* Adjust buttons */
+            .btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            /* Adjust filters */
+            .filter-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .filter-section .input-group {
+                width: 100%;
+            }
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 32px;
+            margin-right: 10px;
+        }
+        
+        /* Table styles */
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* Status badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Page header */
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        
+        /* Action buttons */
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2px;
+        }
+        
+        /* Loading spinner */
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Header - Only visible on desktop -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                <i class="fas fa-tint me-2"></i>
+                <span class="d-none d-md-inline">WaterBill NG Admin</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="dropdown d-none d-lg-block">
+                    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span class="d-none d-md-inline">Admin</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-link text-white d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+                <i class="fas fa-tint me-2"></i>
+                WaterBill NG
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-home me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="manage-payments.html">
+                            <i class="fas fa-credit-card me-1"></i> Manage Payments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="fas fa-users me-1"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="fas fa-chart-bar me-1"></i> Reports
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1>Payment Management</h1>
+                    <p class="mb-0">View and manage all payment transactions</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="exportPayments()">
+                        <i class="fas fa-download me-2"></i> Export
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search by reference, user...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="methodFilter">
+                            <option value="">All Methods</option>
+                            <option value="paystack">Paystack</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="manual_upload">Manual Upload</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" class="form-control" id="dateFrom" placeholder="From Date">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" class="form-control" id="dateTo" placeholder="To Date">
+                    </div>
+                    <div class="col-md-1 d-flex gap-2">
+                        <button id="filterButton" class="btn btn-primary flex-fill">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                        <button id="resetButton" class="btn btn-outline-secondary flex-fill">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Payment Transactions</h5>
+                <div class="d-flex align-items-center">
+                    <span class="text-muted me-2" id="payments-count">Loading...</span>
+                    <button class="btn btn-sm btn-outline-secondary" id="refreshPayments">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Reference</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table">
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2 mb-0">Loading payments...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav class="d-flex justify-content-between align-items-center p-3 border-top">
+                    <div class="text-muted" id="pagination-info">Showing 0 to 0 of 0 entries</div>
+                    <ul class="pagination mb-0" id="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" id="prevPage">Previous</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" id="nextPage">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item active" href="manage-payments.html"><i class="fas fa-list me-2"></i>All Payments</a></li>
+            <li><a class="dropdown-item" href="manage-payments.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="manage-payments.html?status=approved"><i class="fas fa-check-circle me-2"></i>Approved</a></li>
+            <li><a class="dropdown-item" href="manage-payments.html?status=rejected"><i class="fas fa-times-circle me-2"></i>Rejected</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="fault-reports.html"><i class="fas fa-exclamation-circle me-2"></i>Fault Reports</a></li>
+            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+    
+    <!-- Mobile Footer Styles -->
+    <style>
+        /* Mobile Footer */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: #039ed1;
+            background: rgba(3, 158, 209, 0.1);
+        }
+        
+        .mobile-footer-item:hover {
+            color: #039ed1;
+            text-decoration: none;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .mobile-dropdown .dropdown-item.active,
+        .mobile-dropdown .dropdown-item:active {
+            background-color: rgba(3, 158, 209, 0.1);
+            color: #039ed1;
+        }
+        
+        .mobile-dropdown .dropdown-divider {
+            margin: 5px 0;
+        }
+    </style>
+
+    <!-- Payment Details Modal -->
+    <div class="modal fade" id="paymentDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Payment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="paymentDetailsContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Global variables
+        let allPayments = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listeners
+            document.getElementById('filterButton').addEventListener('click', loadPayments);
+            document.getElementById('resetButton').addEventListener('click', resetFilters);
+            document.getElementById('refreshPayments').addEventListener('click', loadPayments);
+            document.getElementById('prevPage').addEventListener('click', () => changePage(-1));
+            document.getElementById('nextPage').addEventListener('click', () => changePage(1));
+            
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('dateFrom').valueAsDate = thirtyDaysAgo;
+            document.getElementById('dateTo').valueAsDate = today;
+            
+            // Load payments
+            loadPayments();
+        });
+        
+        // Load payments from API
+        async function loadPayments() {
+            const tableBody = document.getElementById('payments-table');
+            const loadingRow = `
+                <tr>
+                    <td colspan="8" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 mb-0">Loading payments...</p>
+                    </td>
+                </tr>`;
+            
+            tableBody.innerHTML = loadingRow;
+            
+            try {
+                // Get filter values
+                const searchTerm = document.getElementById('searchInput').value;
+                const statusFilter = document.getElementById('statusFilter').value;
+                const methodFilter = document.getElementById('methodFilter').value;
+                const dateFrom = document.getElementById('dateFrom').value;
+                const dateTo = document.getElementById('dateTo').value;
+                
+                // Build query parameters
+                const params = new URLSearchParams();
+                if (searchTerm) params.append('search', searchTerm);
+                if (statusFilter) params.append('status', statusFilter);
+                if (methodFilter) params.append('method', methodFilter);
+                if (dateFrom) params.append('date_from', dateFrom);
+                if (dateTo) params.append('date_to', dateTo);
+                
+                const response = await fetch(`../../api/admin/payments-list.php?${params.toString()}`, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    allPayments = data.data;
+                    currentPage = 1; // Reset to first page when loading new data
+                    displayPayments(allPayments);
+                    updatePagination(allPayments.length);
+                } else {
+                    showError('Failed to load payments');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                ${data.message || 'No payments found'}
+                            </td>
+                        </tr>`;
+                }
+            } catch (error) {
+                console.error('Error loading payments:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Error loading payments. Please try again.
+                        </td>
+                    </tr>`;
+            }
+        }
+        
+        // Display payments in the table
+        function displayPayments(payments) {
+            const tableBody = document.getElementById('payments-table');
+            
+            if (!payments || payments.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            <i class="far fa-folder-open me-2"></i>
+                            No payments found
+                        </td>
+                    </tr>`;
+                return;
+            }
+            
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedPayments = payments.slice(startIndex, startIndex + itemsPerPage);
+            
+            tableBody.innerHTML = paginatedPayments.map(payment => {
+                const formattedDate = new Date(payment.created_at).toLocaleDateString('en-NG', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const statusClass = {
+                    'pending': 'status-pending',
+                    'approved': 'status-approved',
+                    'rejected': 'status-rejected'
+                }[payment.status] || '';
+                
+                const actionButtons = payment.status === 'pending' ? `
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-sm btn-success" onclick="updatePaymentStatus(${payment.id}, 'approve')" title="Approve">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="updatePaymentStatus(${payment.id}, 'reject')" title="Reject">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>` : '';
+                
+                return `
+                    <tr>
+                        <td>${payment.id}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm bg-light rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-user text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-medium">${payment.user_name || 'N/A'}</div>
+                                    <small class="text-muted">${payment.user_email || ''}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>₦${parseFloat(payment.amount).toLocaleString('en-NG', {minimumFractionDigits: 2})}</td>
+                        <td>${formatMethod(payment.method)}</td>
+                        <td>
+                            <span class="text-nowrap">${payment.transaction_id || 'N/A'}</span>
+                            ${payment.receipt_image ? `
+                                <a href="../../uploads/receipts/${payment.receipt_image}" target="_blank" class="ms-1" title="View Receipt">
+                                    <i class="fas fa-receipt text-primary"></i>
+                                </a>` : ''
+                            }
+                        </td>
+                        <td>
+                            <span class="status-badge ${statusClass}">
+                                ${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                            </span>
+                        </td>
+                        <td>${formattedDate}</td>
+                        <td>
+                            ${actionButtons}
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewPaymentDetails(${payment.id})" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            }).join('');
+        }
+        
+        // Update payment status (approve/reject)
+        async function updatePaymentStatus(paymentId, action) {
+            if (!confirm(`Are you sure you want to ${action} this payment?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('../../api/admin/approve-payment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        payment_id: paymentId,
+                        action: action
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(`Payment ${action}d successfully`, 'success');
+                    loadPayments(); // Refresh the payments list
+                } else {
+                    throw new Error(result.message || 'Failed to update payment status');
+                }
+            } catch (error) {
+                console.error(`Error ${action}ing payment:`, error);
+                showNotification(error.message || 'An error occurred', 'error');
+            }
+        }
+        
+        // View payment details
+        function viewPaymentDetails(paymentId) {
+            // Find the payment in allPayments
+            const payment = allPayments.find(p => p.id == paymentId);
+            if (!payment) return;
+            
+            // Format the details for display
+            const detailsHtml = `
+                <div class="mb-3">
+                    <h5 class="mb-3">Payment Details</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Transaction ID:</strong></p>
+                            <p>${payment.transaction_id || 'N/A'}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Amount:</strong></p>
+                            <p>₦${parseFloat(payment.amount).toLocaleString('en-NG', {minimumFractionDigits: 2})}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Method:</strong></p>
+                            <p>${formatMethod(payment.method)}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Status:</strong></p>
+                            <p>
+                                <span class="badge ${payment.status === 'approved' ? 'bg-success' : payment.status === 'rejected' ? 'bg-danger' : 'bg-warning'}">
+                                    ${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Date:</strong></p>
+                            <p>${new Date(payment.created_at).toLocaleString()}</p>
+                        </div>
+                        ${payment.notes ? `
+                            <div class="col-12">
+                                <p class="mb-1"><strong>Notes:</strong></p>
+                                <p>${payment.notes}</p>
+                            </div>` : ''
+                        }
+                        ${payment.receipt_image ? `
+                            <div class="col-12">
+                                <p class="mb-1"><strong>Receipt:</strong></p>
+                                <a href="../../uploads/receipts/${payment.receipt_image}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download me-1"></i> Download Receipt
+                                </a>
+                            </div>` : ''
+                        }
+                    </div>
+                </div>`;
+            
+            // Show in a modal
+            const modal = new bootstrap.Modal(document.getElementById('paymentDetailsModal'));
+            document.getElementById('paymentDetailsContent').innerHTML = detailsHtml;
+            modal.show();
+        }
+        
+        // Export payments
+        function exportPayments() {
+            // This would typically call an export API endpoint
+            alert('Export functionality will be implemented here');
+            // window.location.href = `../../api/admin/export-payments.php?format=csv`;
+        }
+        
+        // Helper functions
+        function formatMethod(method) {
+            if (!method) return 'Unknown';
+            return method.split('_').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+        
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            const paginationInfo = document.getElementById('pagination-info');
+            
+            // Update pagination info
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+            paginationInfo.textContent = `Showing ${startItem} to ${endItem} of ${totalItems} entries`;
+            
+            // Update pagination buttons
+            prevButton.parentElement.classList.toggle('disabled', currentPage === 1);
+            nextButton.parentElement.classList.toggle('disabled', currentPage >= totalPages);
+            
+            // Update page numbers
+            const pageNumbers = [];
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+            
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            // Generate page number items
+            for (let i = startPage; i <= endPage; i++) {
+                pageNumbers.push(`
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="changePageTo(${i})">${i}</a>
+                    </li>
+                `);
+            }
+            
+            // Update pagination
+            pagination.innerHTML = `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" id="prevPage">Previous</a>
+                </li>
+                ${pageNumbers.join('')}
+                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" id="nextPage">Next</a>
+                </li>
+            `;
+            
+            // Re-attach event listeners
+            document.getElementById('prevPage').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) changePage(-1);
+            });
+            
+            document.getElementById('nextPage').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) changePage(1);
+            });
+        }
+        
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            const totalPages = Math.ceil(allPayments.length / itemsPerPage);
+            
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                displayPayments(allPayments);
+                updatePagination(allPayments.length);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        function changePageTo(page) {
+            const totalPages = Math.ceil(allPayments.length / itemsPerPage);
+            
+            if (page >= 1 && page <= totalPages && page !== currentPage) {
+                currentPage = page;
+                displayPayments(allPayments);
+                updatePagination(allPayments.length);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            return false;
+        }
+        
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('methodFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('dateFrom').valueAsDate = thirtyDaysAgo;
+            document.getElementById('dateTo').valueAsDate = today;
+            
+            loadPayments();
+        }
+        
+        function showNotification(message, type = 'info') {
+            // You can integrate with your notification system here
+            alert(`${type.toUpperCase()}: ${message}`);
+        }
+        
+        function showError(message) {
+            showNotification(message, 'error');
+        }
+        
+        // Logout function
+        function logout() {
+            fetch('/waterbill/api/auth/logout.php', {
+                method: 'POST',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '../auth/login.html';
+                } else {
+                    console.error('Logout failed:', data.message);
+                    alert('Failed to logout. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                window.location.href = '../auth/login.html';
+            });
+        }
+    </script>
+    <style>
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            .row {
+                margin: 0 -15px;
+            }
+            .col-md-6 {
+                width: 100%;
+                padding: 0 15px;
+            }
+            .mb-3 {
+                margin-bottom: 1rem;
+            }
+            .g-3 {
+                gap: 1rem;
+            }
+        }
+    </style>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">Water Bill Management System</span>
+        </div>
+    </footer>
+</body>
+</html>

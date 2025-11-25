@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Manual Payment - WaterBill NG</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .manual-payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #2e6fff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: #1a5fec;
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-btn {
+            border: 2px dashed #ddd;
+            color: #666;
+            background-color: #f9f9f9;
+            padding: 40px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .file-upload-btn:hover {
+            border-color: #2e6fff;
+            background-color: #f0f5ff;
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .payment-instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #2e6fff;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .payment-instructions h3 {
+            margin-top: 0;
+            color: #2e6fff;
+        }
+        
+        .payment-instructions ol {
+            padding-left: 20px;
+        }
+        
+        .payment-instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-header"></div>
+    
+    <div class="container">
+        <div class="manual-payment-container">
+            <h1>Submit Manual Payment</h1>
+            
+            <div class="payment-instructions">
+                <h3>Payment Instructions</h3>
+                <p>Please follow these steps to complete your manual payment:</p>
+                <ol>
+                    <li>Make a payment using one of the methods below</li>
+                    <li>Fill out the form with your payment details</li>
+                    <li>Upload proof of payment (screenshot or receipt)</li>
+                    <li>Submit the form for verification</li>
+                </ol>
+                
+                <h4>Payment Methods:</h4>
+                <p><strong>Bank Transfer:</strong><br>
+                Account Name: WaterBill NG<br>
+                Bank: [Your Bank Name]<br>
+                Account Number: [Your Account Number]<br>
+                Reference: Your Email/Username</p>
+                
+                <p><strong>Cash Payment:</strong><br>
+                Visit our office at [Your Office Address] to make a cash payment.</p>
+            </div>
+            
+            <div id="status-message" class="status-message"></div>
+            
+            <form id="manual-payment-form">
+                <div class="form-group">
+                    <label for="amount">Amount Paid (₦)</label>
+                    <input type="number" id="amount" name="amount" class="form-control" required min="1" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="payment_date">Payment Date</label>
+                    <input type="date" id="payment_date" name="payment_date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="payment_method">Payment Method</label>
+                    <select id="payment_method" name="payment_method" class="form-control" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="bank_transfer">Bank Transfer</option>
+                        <option value="cash">Cash Payment</option>
+                        <option value="pos">POS Payment</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transaction_reference">Transaction Reference/Receipt Number</label>
+                    <input type="text" id="transaction_reference" name="transaction_reference" class="form-control" required>
+                    <small class="text-muted">Enter the transaction ID, receipt number, or any reference for this payment.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Additional Notes (Optional)</label>
+                    <textarea id="notes" name="notes" class="form-control" placeholder="Add any additional information about this payment..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Proof of Payment (PDF only)</label>
+                    <div class="file-upload">
+                        <div class="file-upload-btn" id="file-upload-btn" onclick="document.getElementById('payment_proof').click()">
+                            <i class="fas fa-file-pdf" style="font-size: 24px; margin-bottom: 10px; display: block; color: #e74c3c;"></i>
+                            <div>Upload Receipt (PDF only)</div>
+                            <div id="file-name" style="font-size: 12px; margin-top: 5px; color: #666;">No file selected</div>
+                        </div>
+                        <input type="file" id="payment_proof" name="payment_proof" class="file-upload-input" accept=".pdf" required style="display: none;">
+                        <div id="file-upload-error" style="color: #e74c3c; font-size: 12px; margin-top: 5px; display: none;"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
+                        <label class="form-check-label" for="terms">
+                            I confirm that the information provided is accurate and I have made the payment as described.
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn" id="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Payment
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Load user header
+            $('#user-header').load('../includes/user-header.html');
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            $('#payment_date').val(today);
+            
+            // File upload handling
+            $('#payment_proof').change(function() {
+                const file = this.files[0];
+                const errorDiv = $('#file-upload-error');
+                const fileNameDiv = $('#file-name');
+                
+                if (!file) {
+                    fileNameDiv.text('No file selected');
+                    return;
+                }
+                
+                // Check file type
+                if (file.type !== 'application/pdf') {
+                    errorDiv.text('Only PDF files are allowed').show();
+                    this.value = ''; // Clear the file input
+                    fileNameDiv.text('No file selected');
+                    return;
+                }
+                
+                // Check file size (5MB max)
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (file.size > maxSize) {
+                    errorDiv.text('File size exceeds 5MB limit').show();
+                    this.value = ''; // Clear the file input
+                    fileNameDiv.text('No file selected');
+                    return;
+                }
+                
+                // If we get here, the file is valid
+                errorDiv.hide();
+                fileNameDiv.text(`Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+                
+                // Update file upload button style
+                $('#file-upload-btn').css({
+                    'border-color': '#2ecc71',
+                    'background-color': '#e8f8f0'
+                });
+            });
+            
+            // Handle drag and drop
+            const fileUploadBtn = $('#file-upload-btn')[0];
+            
+            fileUploadBtn.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = '#2e6fff';
+                fileUploadBtn.style.backgroundColor = '#f0f5ff';
+            });
+            
+            fileUploadBtn.addEventListener('dragleave', () => {
+                fileUploadBtn.style.borderColor = '#ddd';
+                fileUploadBtn.style.backgroundColor = '#f9f9f9';
+            });
+            
+            fileUploadBtn.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = '#2e6fff';
+                fileUploadBtn.style.backgroundColor = '#f0f5ff';
+                
+                if (e.dataTransfer.files.length) {
+                    const file = e.dataTransfer.files[0];
+                    $('#payment_proof')[0].files = e.dataTransfer.files;
+                    
+                    // Trigger change event
+                    $('#payment_proof').trigger('change');
+                }
+            });
+            
+            // Form submission
+            $('#manual-payment-form').submit(function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData();
+                formData.append('amount', $('#amount').val());
+                formData.append('payment_date', $('#payment_date').val());
+                formData.append('payment_method', $('#payment_method').val());
+                formData.append('transaction_reference', $('#transaction_reference').val());
+                formData.append('notes', $('#notes').val());
+                
+                const fileInput = $('#payment_proof')[0];
+                if (fileInput.files.length > 0) {
+                    formData.append('payment_proof', fileInput.files[0]);
+                }
+                
+                // Disable submit button
+                const submitBtn = $('#submit-btn');
+                submitBtn.prop('disabled', true);
+                submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+                
+                // Clear previous messages
+                $('#status-message').removeClass('status-success status-error').hide();
+                
+                // Submit the form
+                fetch('../../api/user/submit-manual-payment.php', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showStatus('Payment submitted successfully! Our team will review it shortly.', 'success');
+                        // Reset form
+                        $('#manual-payment-form')[0].reset();
+                        $('#file-name').text('');
+                        $('#preview-image').hide();
+                    } else {
+                        showStatus('Error: ' + (data.message || 'Failed to submit payment'), 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showStatus('An error occurred. Please try again.', 'error');
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.prop('disabled', false);
+                    submitBtn.html('<i class="fas fa-paper-plane"></i> Submit Payment');
+                });
+            });
+            
+            // Helper function to show status messages
+            function showStatus(message, type) {
+                const statusDiv = $('#status-message');
+                statusDiv.removeClass('status-success status-error')
+                         .addClass(`status-${type}`)
+                         .text(message)
+                         .fadeIn();
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    statusDiv.fadeOut();
+                }, 10000);
+            }
+        });
+    </script>
+</body>
+</html>

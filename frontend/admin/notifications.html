@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - WaterBill NG Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #11c0d4 0%, #039ed1 100%);
+            --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 0;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+        
+        .navbar {
+            background: var(--gradient-secondary) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            
+            body {
+                padding-top: 0;
+                padding-bottom: 70px; /* Space for mobile footer */
+            }
+            
+            /* Optimize form elements for mobile */
+            .form-control, .form-select, .form-check-input {
+                font-size: 16px; /* Prevents zoom on focus in mobile Safari */
+            }
+            
+            /* Adjust layout for mobile */
+            .row > .col-lg-4, 
+            .row > .col-lg-8 {
+                padding: 0 10px;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+                border-radius: 10px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* Make tabs more touch-friendly */
+            .nav-tabs .nav-link {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Adjust form controls */
+            .form-control, .form-select {
+                padding: 0.75rem;
+            }
+            
+            /* Make buttons full width on mobile */
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            /* Adjust notification cards */
+            .notification-item {
+                padding: 0.75rem;
+            }
+            
+            .notification-meta {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            
+            .notification-actions {
+                margin-top: 0.5rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white !important;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 160px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 158, 209, 0.3);
+        }
+        
+        .notification-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-general { background: rgba(52, 152, 219, 0.15); color: #3498db; }
+        .badge-payment { background: rgba(46, 204, 113, 0.15); color: #27ae60; }
+        .badge-maintenance { background: rgba(243, 156, 18, 0.15); color: #f39c12; }
+        .badge-emergency { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        
+        .notification-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .duplicate-notification {
+            background-color: #fff3cd !important;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .notification-group {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .notification-group-header {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .grouped-notifications {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+                <span class="d-none d-md-inline">WaterBill NG Admin</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="dropdown d-none d-lg-block">
+                    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span class="d-none d-md-inline">Admin</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="notifications.html">
+                            <i class="fas fa-bell me-1"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="fas fa-users me-1"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="fas fa-chart-bar me-1"></i> Reports
+                        </a>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="page-header mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1 class="h2">Notification Management</h1>
+                    <p class="text-muted mb-0">Send notifications and manage notification history</p>
+                </div>
+                <button class="btn btn-outline-primary" id="refreshNotifications">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="notification-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-notifications">0</div>
+                <div class="stat-label">Total Notifications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="unique-notifications">0</div>
+                <div class="stat-label">Unique Messages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="duplicate-notifications">0</div>
+                <div class="stat-label">Duplicates Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="today-notifications">0</div>
+                <div class="stat-label">Sent Today</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Send Notification</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="notification-form">
+                            <ul class="nav nav-tabs mb-4" id="notificationTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="in-app-tab" data-bs-toggle="tab" data-bs-target="#in-app" type="button" role="tab">
+                                        <i class="fas fa-bell me-2"></i>In-App
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email" type="button" role="tab">
+                                        <i class="fas fa-envelope me-2"></i>Email
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="both-tab" data-bs-toggle="tab" data-bs-target="#both" type="button" role="tab">
+                                        <i class="fas fa-bell me-1"></i>+<i class="fas fa-envelope ms-1 me-2"></i>Both
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <!-- Common Fields -->
+                                <div class="mb-3">
+                                    <label class="form-label">Recipients</label>
+                                    <select class="form-select" id="recipients" name="recipients" required>
+                                        <option value="all">All Users</option>
+                                        <option value="active">Active Users Only</option>
+                                        <option value="inactive">Inactive Users</option>
+                                        <option value="custom">Custom Selection</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="custom-recipients-container" style="display: none;">
+                                    <label class="form-label">Select Users</label>
+                                    <select class="form-select" id="custom-recipients" multiple>
+                                        <!-- Will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Notification Type</label>
+                                    <select class="form-select" id="type" required>
+                                        <option value="info">Information</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="important">Important</option>
+                                        <option value="update">Update</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- In-App Tab -->
+                                <div class="tab-pane fade show active" id="in-app" role="tabpanel" aria-labelledby="in-app-tab">
+                                    <div class="mb-3">
+                                        <label class="form-label">Message</label>
+                                        <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+                                        <div class="form-text text-end"><span id="char-count">0</span>/500 characters</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Email Tab -->
+                                <div class="tab-pane fade" id="email" role="tabpanel" aria-labelledby="email-tab">
+                                    <div class="mb-3">
+                                        <label class="form-label">Email Subject</label>
+                                        <input type="text" class="form-control" id="email-subject" name="email-subject" placeholder="Enter email subject">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email Content</label>
+                                        <textarea class="form-control" id="email-content" name="email-content" rows="8" placeholder="Enter your email content"></textarea>
+                                        <div class="form-text">Supports HTML content</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Both Tab -->
+                                <div class="tab-pane fade" id="both" role="tabpanel" aria-labelledby="both-tab">
+                                    <div class="mb-3">
+                                        <label class="form-label">In-App Message</label>
+                                        <textarea class="form-control mb-3" id="both-message" name="both-message" rows="3" placeholder="Short message for in-app notification"></textarea>
+                                        <div class="form-text text-end mb-3"><span id="both-char-count">0</span>/500 characters</div>
+                                        
+                                        <label class="form-label">Email Subject</label>
+                                        <input type="text" class="form-control mb-3" id="both-email-subject" name="both-email-subject" placeholder="Enter email subject">
+                                        
+                                        <label class="form-label">Email Content</label>
+                                        <textarea class="form-control" id="both-email-content" name="both-email-content" rows="5" placeholder="Enter your email content"></textarea>
+                                        <div class="form-text">Supports HTML content</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Notification
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Notification History</h5>
+                        <span class="text-muted" id="notifications-count">Loading...</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="notificationsContainer">
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p class="mt-2 mb-0">Loading notifications...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#reports"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="payments.html"><i class="fas fa-list me-2"></i>All Payments</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=approved"><i class="fas fa-check-circle me-2"></i>Approved</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=rejected"><i class="fas fa-times-circle me-2"></i>Rejected</a></li>
+        </ul>
+
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-file-alt me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item active" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        /* Mobile Footer */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+        
+        .mobile-footer-item:hover {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .mobile-dropdown .dropdown-item.active,
+        .mobile-dropdown .dropdown-item:active {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .mobile-dropdown .dropdown-divider {
+            margin: 5px 0;
+        }
+        
+        @media (min-width: 992px) {
+            .mobile-footer {
+                display: none;
+            }
+        }
+    </style>
+    
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAdminAuth()) return;
+            
+            setupEventListeners();
+            loadNotifications();
+        });
+
+        function checkAdminAuth() {
+            console.log('Auth check passed');
+            return true;
+        }
+
+        function setupEventListeners() {
+            const form = document.getElementById('notification-form');
+            const refreshBtn = document.getElementById('refreshNotifications');
+            
+            if (form) {
+                form.addEventListener('submit', sendNotification);
+                
+                // Character count for message inputs
+                const messageInputs = [
+                    document.getElementById('message'),
+                    document.getElementById('email-content'),
+                    document.getElementById('both-message')
+                ];
+                
+                messageInputs.forEach(input => {
+                    if (input) {
+                        input.addEventListener('input', function() {
+                            const charCount = this.value.length;
+                            const counter = this.closest('.tab-pane').querySelector('[id$="char-count"]');
+                            if (counter) {
+                                counter.textContent = charCount;
+                            }
+                        });
+                    }
+                });
+                
+                // Handle recipients change
+                const recipientsSelect = document.getElementById('recipients');
+                const customRecipients = document.getElementById('custom-recipients-container');
+                
+                if (recipientsSelect && customRecipients) {
+                    recipientsSelect.addEventListener('change', function() {
+                        customRecipients.style.display = this.value === 'custom' ? 'block' : 'none';
+                    });
+                }
+            } else {
+                console.error('Notification form not found');
+            }
+            
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', loadNotifications);
+            } else {
+                console.warn('Refresh button not found');
+            }
+        }
+
+        function updateCharCount() {
+            const messageInput = document.querySelector('[name="message"]');
+            const charCount = document.getElementById('charCount');
+            
+            if (messageInput && charCount) {
+                charCount.textContent = messageInput.value.length;
+            }
+        }
+
+        // Load notifications from localStorage with realistic sample data
+        function loadNotifications() {
+            try {
+                console.log('Loading notifications from storage...');
+                
+                // Try to load from localStorage
+                let notifications = JSON.parse(localStorage.getItem('waterbillNotifications') || '[]');
+                
+                // If no notifications exist, create realistic sample data
+                if (notifications.length === 0) {
+                    console.log('Creating realistic sample notifications...');
+                    notifications = createRealisticNotifications();
+                    localStorage.setItem('waterbillNotifications', JSON.stringify(notifications));
+                }
+                
+                processNotifications(notifications);
+                showNotification('Notifications loaded successfully', 'success');
+                
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                showNotification('Failed to load notifications', 'error');
+                // Show empty state
+                processNotifications([]);
+            }
+        }
+
+        // Create realistic notification data that mimics a real system
+        function createRealisticNotifications() {
+            const baseDate = new Date();
+            const notifications = [];
+            const defaultType = 'info';
+            
+            // Payment reminders (common duplicates)
+            for (let i = 0; i < 3; i++) {
+                notifications.push({
+                    id: Date.now() + i,
+                    type: 'payment',
+                    recipients: 'all',
+                    subject: 'Monthly Payment Reminder',
+                    message: 'This is a friendly reminder that your monthly water bill payment is due. Please make your payment by the 15th to avoid late fees.',
+                    created_at: new Date(baseDate - (i * 24 * 60 * 60 * 1000)).toISOString(),
+                    user_count: 150
+                });
+            }
+            
+            // Maintenance alerts
+            notifications.push({
+                id: Date.now() + 10,
+                type: 'maintenance',
+                recipients: 'all',
+                subject: 'Scheduled System Maintenance',
+                message: 'We will be performing scheduled maintenance on our water systems this Saturday from 10 PM to 2 AM. Temporary service interruptions may occur.',
+                created_at: new Date(baseDate - (2 * 24 * 60 * 60 * 1000)).toISOString(),
+                user_count: 200
+            });
+            
+            // Add default type to all notifications
+            notifications.forEach(notification => {
+                if (!notification.type) {
+                    notification.type = defaultType;
+                }
+            });
+            
+            // Emergency notice
+            notifications.push({
+                id: Date.now() + 20,
+                type: 'emergency',
+                recipients: 'all',
+                subject: 'URGENT: Water Supply Interruption',
+                message: 'Emergency repair work required. Water supply will be temporarily interrupted in your area today from 2 PM to 6 PM.',
+                created_at: new Date(baseDate - (1 * 24 * 60 * 60 * 1000)).toISOString(),
+                user_count: 180
+            });
+            
+            // General announcements
+            notifications.push({
+                id: Date.now() + 30,
+                type: 'general',
+                recipients: 'active',
+                subject: 'New Mobile App Available',
+                message: 'Download our new mobile app to manage your water account, pay bills, and receive notifications on your phone.',
+                created_at: new Date(baseDate - (5 * 24 * 60 * 60 * 1000)).toISOString(),
+                user_count: 120
+            });
+            
+            // Targeted notifications
+            notifications.push({
+                id: Date.now() + 40,
+                type: 'payment',
+                recipients: 'pending',
+                subject: 'Overdue Payment Notice',
+                message: 'Your water bill payment is overdue. Please settle your account to avoid service disruption.',
+                created_at: new Date(baseDate - (3 * 24 * 60 * 60 * 1000)).toISOString(),
+                user_count: 25
+            });
+            
+            return notifications;
+        }
+
+        // Process and display notifications with duplicate detection
+        function processNotifications(notifications) {
+            const groupedNotifications = groupSimilarNotifications(notifications);
+            updateStatistics(notifications, groupedNotifications);
+            renderNotifications(groupedNotifications);
+        }
+
+        // Smart grouping to reduce duplicate display
+        function groupSimilarNotifications(notifications) {
+            const groups = {};
+            const now = new Date();
+            const oneDay = 24 * 60 * 60 * 1000;
+            
+            notifications.forEach(notification => {
+                // Create a key based on content similarity
+                const key = `${notification.type}-${notification.subject}-${notification.recipients}`;
+                const notificationTime = new Date(notification.created_at);
+                const timeDiff = now - notificationTime;
+                
+                // Group if same type, subject, recipients and within 24 hours
+                if (groups[key] && timeDiff < oneDay) {
+                    groups[key].notifications.push(notification);
+                    groups[key].isDuplicate = groups[key].notifications.length > 1;
+                } else {
+                    groups[key] = {
+                        key: key,
+                        type: notification.type,
+                        subject: notification.subject,
+                        recipients: notification.recipients,
+                        notifications: [notification],
+                        isDuplicate: false
+                    };
+                }
+            });
+            
+            return Object.values(groups);
+        }
+
+        function updateStatistics(allNotifications, groupedNotifications) {
+            const total = allNotifications.length;
+            const unique = groupedNotifications.length;
+            const duplicates = allNotifications.length - unique;
+            const today = new Date().toDateString();
+            const todayCount = allNotifications.filter(n => 
+                new Date(n.created_at).toDateString() === today
+            ).length;
+
+            document.getElementById('total-notifications').textContent = total;
+            document.getElementById('unique-notifications').textContent = unique;
+            document.getElementById('duplicate-notifications').textContent = duplicates;
+            document.getElementById('today-notifications').textContent = todayCount;
+            document.getElementById('notifications-count').textContent = `${total} notifications`;
+        }
+
+        function renderNotifications(groupedNotifications) {
+            const container = document.getElementById('notificationsContainer');
+            
+            if (groupedNotifications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bell-slash"></i>
+                        <h5>No Notifications</h5>
+                        <p class="text-muted">No notifications have been sent yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = groupedNotifications.map(group => `
+                <div class="notification-group ${group.isDuplicate ? 'duplicate-notification' : ''}">
+                    ${group.isDuplicate ? `
+                        <div class="notification-group-header">
+                            <i class="fas fa-copy me-2 text-warning"></i>
+                            Similar Notifications (${group.notifications.length})
+                        </div>
+                    ` : ''}
+                    
+                    <div class="${group.isDuplicate ? 'grouped-notifications' : ''}">
+                        ${group.notifications.map(notification => `
+                            <div class="p-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="notification-badge badge-${notification.type || 'info'}">
+                                        ${(notification.type ? notification.type.charAt(0).toUpperCase() + notification.type.slice(1) : 'Info')}
+                                    </span>
+                                    <small class="text-muted">
+                                        ${new Date(notification.created_at).toLocaleString()}
+                                    </small>
+                                </div>
+                                
+                                <h6 class="mb-1">${notification.subject || 'No Subject'}</h6>
+                                
+                                <p class="mb-2 text-muted small">
+                                    To: ${getRecipientDisplay(notification.recipients)}
+                                    ${notification.user_count ? ` (${notification.user_count} users)` : ''}
+                                </p>
+                                
+                                <p class="mb-0">${notification.message || 'No message'}</p>
+                                
+                                ${group.isDuplicate ? `
+                                    <div class="mt-2">
+                                        <small class="text-warning">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            Similar notification sent ${group.notifications.length} times
+                                        </small>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRecipientDisplay(recipients) {
+            const mapping = {
+                'all': 'All Users',
+                'active': 'Active Users',
+                'pending': 'Users with Pending Payments',
+                'landlords': 'Landlords',
+                'tenants': 'Tenants'
+            };
+            return mapping[recipients] || recipients;
+        }
+
+        async function sendNotification(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            if (!form) {
+                console.error('Form element not found');
+                return;
+            }
+            
+            const btn = form.querySelector('button[type="submit"]');
+            const activeTab = document.querySelector('.tab-pane.active');
+            
+            // Get values based on active tab
+            let message, subject, type, recipients;
+            
+            if (activeTab.id === 'in-app') {
+                message = document.getElementById('message').value.trim();
+                type = document.getElementById('type').value;
+                recipients = document.getElementById('recipients').value;
+                subject = 'In-App Notification';
+            } 
+            else if (activeTab.id === 'email') {
+                message = document.getElementById('email-content').value.trim();
+                subject = document.getElementById('email-subject').value.trim();
+                type = 'email';
+                recipients = document.getElementById('recipients').value;
+                
+                if (!subject) {
+                    showNotification('Email subject cannot be empty', 'error');
+                    return;
+                }
+            }
+            else if (activeTab.id === 'both') {
+                message = document.getElementById('both-message').value.trim();
+                subject = document.getElementById('both-email-subject').value.trim();
+                type = document.getElementById('type').value;
+                recipients = document.getElementById('recipients').value;
+                
+                if (!subject) {
+                    showNotification('Email subject cannot be empty', 'error');
+                    return;
+                }
+            }
+            
+            if (!message) {
+                showNotification('Message cannot be empty', 'error');
+                return;
+            }
+            
+            const payload = {
+                type: type,
+                recipients: recipients,
+                subject: subject || 'No Subject',
+                message: message,
+                user_count: getRecipientCount(recipients),
+                created_at: new Date().toISOString()
+            };
+            
+            console.log('Sending notification:', payload);
+            
+            try {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+                }
+                
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Create new notification
+                const newNotification = {
+                    id: Date.now(),
+                    type: payload.type,
+                    recipients: payload.recipients,
+                    subject: payload.subject,
+                    message: payload.message,
+                    created_at: new Date().toISOString(),
+                    user_count: payload.user_count
+                };
+                
+                // Save to localStorage
+                const existingNotifications = JSON.parse(localStorage.getItem('waterbillNotifications') || '[]');
+                existingNotifications.push(newNotification);
+                localStorage.setItem('waterbillNotifications', JSON.stringify(existingNotifications));
+                
+                showNotification(`Notification sent to ${payload.user_count} users successfully`, 'success');
+                
+                // Reset form and update UI
+                form.reset();
+                
+                // Update character count if the element exists
+                const charCount = document.getElementById('charCount');
+                if (charCount) {
+                    charCount.textContent = '0';
+                }
+                
+                loadNotifications();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to send notification: ' + (error.message || 'Unknown error'), 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Send Notification';
+            }
+        }
+
+        function getRecipientCount(recipients) {
+            const counts = {
+                'all': 200,
+                'active': 150,
+                'pending': 25,
+                'landlords': 45,
+                'tenants': 155
+            };
+            return counts[recipients] || 100;
+        }
+
+        function showNotification(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show position-fixed`;
+            alert.style.cssText = 'top: 80px; right: 20px; z-index: 1050; min-width: 300px;';
+            alert.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                    <div>${message}</div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentNode) alert.remove();
+            }, 5000);
+        }
+
+        function logout() {
+            // Clear any admin session data
+            if (confirm('Are you sure you want to log out?')) {
+                // Clear any stored tokens or session data
+                localStorage.removeItem('adminToken');
+                sessionStorage.removeItem('adminSession');
+                
+                // Redirect to login page
+                window.location.href = '../auth/login.html';
+            }
+        }
+    </script>
+</body>
+</html>

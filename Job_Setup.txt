@@ -1,0 +1,2 @@
+# Run daily at 9am
+0 9 * * * php /path/to/waterbill-ng/cron/subscription-reminders.php

@@ -1,0 +1,46 @@
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #2c3e50;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    z-index: 1000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bottom-nav .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav .nav-link i {
+    font-size: 1.2rem;
+    margin-bottom: 3px;
+}
+
+.bottom-nav .nav-link.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.bottom-nav .nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Add padding to the bottom of the page to prevent content from being hidden */
+body {
+    padding-bottom: 70px;
+}

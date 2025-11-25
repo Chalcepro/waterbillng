@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - WaterBill NG Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <!-- Header will be loaded here -->
+    <div id="adminHeader"></div>
+    
+    <style>
+        body { 
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f8faff;
+            min-height: 100vh;
+            padding-top: 70px;
+            padding-bottom: 20px;
+        }
+        .status-active {
+            background: #00C853;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-inactive {
+            background: #FF5252;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .action-btn {
+            padding: 4px 8px;
+            margin: 0 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .action-btn.edit {
+            background: #2196F3;
+            color: white;
+        }
+        .action-btn.delete {
+            background: #F44336;
+            color: white;
+        }
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: none;
+            border-radius: 0.5rem;
+        }
+        .table th {
+            font-weight: 600;
+            color: #495057;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-users me-2"></i>User Management</h4>
+                    <button class="btn btn-primary" onclick="openNewUserModal()">
+                        <i class="fas fa-plus me-2"></i>Add User
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Users Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center">Loading users...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="newUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="newUserForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="first_name" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" class="form-control" name="middle_name">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Flat Number (Optional)</label>
+                            <input type="text" class="form-control" name="flat_no" placeholder="e.g., A101, B202">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" id="newPassword" required>
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editUserForm">
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="first_name" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" class="form-control" name="middle_name">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Flat Number (Optional)</label>
+                            <input type="text" class="form-control" name="flat_no" placeholder="e.g., A101, B202">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Header -->
+    <script>
+        // Load admin header
+        fetch('includes/admin-header.html')
+            .then(response => response.text())
+            .then(html => {
+                const headerContainer = document.getElementById('adminHeader');
+                if (headerContainer) {
+                    headerContainer.outerHTML = html;
+                    // Mark users link as active
+                    const usersLink = document.querySelector('a[href="users.html"]');
+                    if (usersLink) {
+                        usersLink.classList.add('active');
+                        usersLink.setAttribute('aria-current', 'page');
+                    }
+                }
+            })
+            .catch(error => console.error('Error loading header:', error));
+    </script>
+    
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../assets/js/notify.js"></script>
+    <script src="../assets/js/auth-guard.js"></script>
+    
+    <script>
+        // Global variables
+        let newUserModal, editUserModal;
+        let currentEditUserId = null;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize modals
+            newUserModal = new bootstrap.Modal(document.getElementById('newUserModal'));
+            editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Load users
+            loadUsers();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // New user form submission
+            const newUserForm = document.getElementById('newUserForm');
+            if (newUserForm) {
+                newUserForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveNewUser();
+                });
+            }
+            
+            // Edit user form submission
+            const editUserForm = document.getElementById('editUserForm');
+            if (editUserForm) {
+                editUserForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    updateUser();
+                });
+            }
+            
+            // Toggle password visibility
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('toggle-password') || e.target.closest('.toggle-password')) {
+                    const button = e.target.classList.contains('toggle-password') ? e.target : e.target.closest('.toggle-password');
+                    const input = button.previousElementSibling;
+                    const icon = button.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                }
+            });
+        }
+
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch('../../api/admin/users-list.php');
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load users');
+                }
+                
+                const tbody = document.getElementById('users-table');
+                if (!tbody) return;
+                
+                if (!data.users || data.users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No users found</td></tr>';
+                    return;
+                }
+                
+                // Render users
+                tbody.innerHTML = data.users.map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.first_name || ''} ${user.middle_name ? user.middle_name + ' ' : ''}${user.last_name || ''}</td>
+                        <td>${user.email || 'N/A'}</td>
+                        <td>${user.phone || 'N/A'}</td>
+                        <td>
+                            <span class="status-${user.status === 'active' ? 'active' : 'inactive'}">
+                                ${user.status || 'inactive'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-btn edit" onclick="openEditUserModal(${user.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="if(confirm('Are you sure you want to delete this user?')) deleteUser(${user.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+                if (window.notify) {
+                    notify.error('Failed to load users: ' + (error.message || 'Unknown error'));
+                }
+            }
+        }
+
+        // Open edit user modal
+        async function openEditUserModal(userId) {
+            try {
+                currentEditUserId = userId;
+                const response = await fetch(`../../api/admin/get-user.php?id=${userId}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load user data');
+                }
+                
+                const user = data.user;
+                const form = document.getElementById('editUserForm');
+                
+                if (form) {
+                    form.elements['id'].value = user.id;
+                    // Split full name into components if available
+                    if (user.name) {
+                        const nameParts = user.name.split(' ');
+                        form.elements['first_name'].value = nameParts[0] || '';
+                        form.elements['last_name'].value = nameParts[nameParts.length - 1] || '';
+                        if (nameParts.length > 2) {
+                            form.elements['middle_name'].value = nameParts.slice(1, -1).join(' ');
+                        } else {
+                            form.elements['middle_name'].value = '';
+                        }
+                    }
+                    form.elements['email'].value = user.email || '';
+                    form.elements['phone'].value = user.phone || '';
+                    form.elements['flat_no'].value = user.flat_no || '';
+                    form.elements['status'].value = user.status || 'active';
+                    
+                    // Show the modal
+                    editUserModal.show();
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                if (window.notify) {
+                    notify.error('Failed to load user data: ' + (error.message || 'Unknown error'));
+                }
+            }
+        }
+
+        // Save new user
+        async function saveNewUser() {
+            const form = document.getElementById('newUserForm');
+            if (!form) return;
+
+            // Combine name fields for display
+            const firstName = form.elements['first_name'].value.trim();
+            const middleName = form.elements['middle_name'].value.trim();
+            const lastName = form.elements['last_name'].value.trim();
+            
+            if (!firstName || !lastName) {
+                if (window.notify) {
+                    notify.error('First name and last name are required');
+                }
+                return;
+            }
+
+            const formData = new FormData(form);
+            // Add full_name to formData for display purposes
+            formData.append('full_name', `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`.trim());
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+                const response = await fetch('../../api/admin/create-user.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to create user');
+                }
+                
+                if (window.notify) {
+                    notify.success('User created successfully');
+                }
+                
+                // Close modal and reset form
+                newUserModal.hide();
+                form.reset();
+                
+                // Refresh users list
+                loadUsers();
+                
+            } catch (error) {
+                console.error('Error saving user:', error);
+                if (window.notify) {
+                    notify.error('Failed to save user: ' + (error.message || 'Unknown error'));
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // Update user
+        async function updateUser() {
+            const form = document.getElementById('editUserForm');
+            if (!form || !currentEditUserId) return;
+            
+            const formData = new FormData(form);
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+                
+                // Add user ID to form data
+                formData.append('id', currentEditUserId);
+                
+                const response = await fetch('../../api/admin/update-user.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to update user');
+                }
+                
+                if (window.notify) {
+                    notify.success('User updated successfully');
+                }
+                
+                // Close modal
+                editUserModal.hide();
+                
+                // Refresh users list
+                loadUsers();
+                
+            } catch (error) {
+                console.error('Error updating user:', error);
+                if (window.notify) {
+                    notify.error('Failed to update user: ' + (error.message || 'Unknown error'));
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // Delete user
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`../../api/admin/delete-user.php?id=${userId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to delete user');
+                }
+                
+                if (window.notify) {
+                    notify.success('User deleted successfully');
+                }
+                
+                // Refresh users list
+                loadUsers();
+                
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                if (window.notify) {
+                    notify.error('Failed to delete user: ' + (error.message || 'Unknown error'));
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            // Clear any user session data
+            if (typeof localStorage !== 'undefined') {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+            }
+            
+            // Redirect to login page
+            window.location.href = '../auth/login.html';
+        }
+    </script>
+</body>
+</html>

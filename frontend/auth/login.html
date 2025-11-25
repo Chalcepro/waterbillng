@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WaterBill NG</title>
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <!-- Bootstrap 5 CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-bg-waves"></div>
+    <div class="auth-container" style="background: transparent; box-shadow: none;">
+        <img src="../assets/logo.png" alt="WaterBill NG Logo" class="logo" onerror="this.style.display='none'">
+        <h2 style="color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.2)">Sign In</h2>
+        <div id="error-message" class="error" style="display: none;"></div>
+        <form id="login-form" autocomplete="on" class="w-100" style="max-width:420px" novalidate>
+            <div class="form-group">
+                <label for="identifier" class="text-white-50">Username, Email or Phone</label>
+                <input class="form-control form-control-lg auth-input" type="text" name="identifier" id="identifier" placeholder="" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password" class="text-white-50">Password</label>
+                <input class="form-control form-control-lg auth-input" type="password" name="password" id="password" placeholder="" required>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-1 mb-2">
+                <span class="small text-white-50">Don't have an account? <a class="link-light link-opacity-75-hover" href="register.html">Register </a></span>
+                <span class="small text-white-50"><a href="forgot-password.html" class="link-light link-opacity-75-hover small"> Forgot Password ?</a></span>
+            </div>
+            <button type="submit" id="login-btn" class="btn btn-teal btn-lg w-100 shadow-sm">Login</button>
+        </form>
+    </div>
+
+    <!-- Load notify.js only if it exists and is JavaScript to avoid HTML error responses -->
+    <script>
+    (function tryLoadNotify(){
+        const scriptUrl = '../assets/js/notify.js';
+        // HEAD to check content-type (some hosts redirect to HTML error pages — this avoids that)
+        fetch(scriptUrl, { method: 'HEAD' })
+        .then(r => {
+            const ct = r.headers.get('content-type') || '';
+            if (r.ok && ct.includes('javascript')) {
+                const s = document.createElement('script');
+                s.src = scriptUrl;
+                document.head.appendChild(s);
+            } else {
+                console.warn('notify.js not loaded (missing or non-JS):', scriptUrl);
+            }
+        }).catch(()=> {
+            // ignore fetch errors; notify is non-critical
+            console.warn('notify.js HEAD check failed; skipping notify load.');
+        });
+    })();
+    </script>
+
+    <script>
+    // ---------- Login handler: sends JSON {identifier, password} ----------
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const loginBtn = document.getElementById('login-btn');
+        const errorDiv = document.getElementById('error-message');
+
+        // reset UI
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+
+        const identifier = (document.getElementById('identifier').value || '').trim();
+        const password = (document.getElementById('password').value || '');
+
+        if (!identifier || !password) {
+            errorDiv.textContent = 'Please fill in all fields';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Logging in...';
+
+        try {
+            const apiUrl = '../../api/auth/login-direct.php';
+            console.log('Making request to:', apiUrl);
+
+            // build JSON payload using the key the server expects
+            const payload = {
+                identifier: identifier,
+                password: password
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // read response as text first so we can detect HTML (server warnings)
+            const responseText = await response.text();
+            console.log('Raw login response:', responseText);
+
+            // If server returned HTML (e.g. PHP warning or an HTML error page), show a generic server error
+            if (responseText.trim().startsWith('<') || responseText.includes('<br') || responseText.includes('Warning') || responseText.includes('Notice')) {
+                // log the server response for debugging (dev only)
+                console.error('Server returned HTML/warnings:', responseText);
+                throw new Error('Server error: Please try again later.');
+            }
+
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (err) {
+                console.error('Failed to parse JSON response:', err);
+                throw new Error('Invalid response from server.');
+            }
+
+            console.log('Login response parsed:', result);
+
+            if (result.success) {
+                // Save user data safely (only minimal)
+                const user = result.user || {};
+                const userData = {
+                    id: user.id || null,
+                    username: user.username || user.email || '',
+                    role: user.role || '',
+                    name: user.full_name || user.name || ''
+                };
+                try { sessionStorage.setItem('user', JSON.stringify(userData)); } catch (e) { console.warn('sessionStorage fail', e); }
+
+                // show success (if notify available)
+                if (window.notify && typeof window.notify.success === 'function') {
+                    notify.success(result.message || 'Login successful');
+                } else {
+                    console.info(result.message || 'Login successful');
+                }
+
+                // redirect based on role (fallback to user dashboard)
+                const redirectPath = (userData.role === 'admin') ? '../admin/dashboard.html' : '../user/dashboard.html';
+                setTimeout(() => {
+                    console.log('Login successful, redirecting to:', redirectPath);
+                    window.location.href = redirectPath;
+                }, 350);
+                return;
+            }
+
+            // Not success: show error message returned by server
+            const errorMessage = result.message || 'Login failed. Please check your credentials.';
+            errorDiv.textContent = errorMessage;
+            errorDiv.style.display = 'block';
+            if (window.notify && typeof window.notify.error === 'function') notify.error(errorMessage);
+        } catch (error) {
+            console.error('Login error:', error);
+            const msg = error.message || 'An error occurred. Please try again.';
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+            if (window.notify && typeof window.notify.error === 'function') notify.error(msg);
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+    });
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(180deg, #11c0d4 0%, #08a9d4 40%, #04a0c9 60%, #039ed1 100%);
+            overflow: hidden;
+        }
+        .auth-bg-waves::before, .auth-bg-waves::after {
+            content: '';
+            position: absolute;
+            left: -10%;
+            right: -10%;
+            height: 40vh;
+            border-bottom-left-radius: 50% 40%;
+            border-bottom-right-radius: 50% 40%;
+            background: radial-gradient(60% 80% at 50% 20%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 60%, rgba(255,255,255,0.08) 100%);
+            top: -22vh;
+            filter: blur(0.3px);
+            z-index: -1;
+        }
+        .auth-bg-waves::after{
+            top: auto;
+            bottom: -22vh;
+            border-top-left-radius: 50% 40%;
+            border-top-right-radius: 50% 40%;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .auth-input {
+            border-radius: 999px;
+            padding-left: 16px;
+            padding-right: 16px;
+            border: none;
+            background: rgba(255,255,255,0.9);
+        }
+        .auth-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 .2rem rgba(3, 158, 209, .25);
+        }
+        .btn-teal {
+            background: #0d6e7a;
+            border-radius: 999px;
+            border: none;
+        }
+        .btn-teal:hover { background: #0a5962; }
+        .error {
+            color: #fff;
+            background: rgba(231, 76, 60, 0.12);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+    </style>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

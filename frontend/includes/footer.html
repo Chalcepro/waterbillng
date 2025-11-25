@@ -1,0 +1,125 @@
+<footer class="main-footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>WaterBill NG</h3>
+            <p>Providing clean and reliable water services to our community. Your satisfaction is our priority.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="payment.html">Make Payment</a></li>
+                <li><a href="history.html">Payment History</a></li>
+                <li><a href="report-fault.html">Report Fault</a></li>
+                <li><a href="profile.html">My Profile</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p><i class="fas fa-map-marker-alt"></i> 123 Water Street, City, Country</p>
+            <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+            <p><i class="fas fa-envelope"></i> support@waterbillng.com</p>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Newsletter</h4>
+            <p>Subscribe to our newsletter for updates and announcements.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <div class="footer-content">
+            <p>&copy; 2025 WaterBill NG. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<footer class="mobile-footer">
+    <nav class="footer-nav">
+        <a href="dashboard.html" class="footer-link">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="payment.html" class="footer-link">
+            <i class="fas fa-wallet"></i>
+            <span>Payments</span>
+        </a>
+        <a href="history.html" class="footer-link">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="profile.html" class="footer-link">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+        <a href="logout.html" class="footer-link">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </nav>
+</footer>
+
+<style>
+    .mobile-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #0369a1;
+        color: white;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .footer-nav {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+    .footer-link {
+        text-align: center;
+        color: white;
+        text-decoration: none;
+        font-size: 0.75rem;
+        transition: color 0.2s ease;
+    }
+
+    .footer-link i {
+        font-size: 1.25rem;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .footer-link:hover {
+        color: #7dd3fc;
+    }
+
+    @media (min-width: 768px) {
+        .footer-link {
+            font-size: 0.875rem;
+        }
+
+        .footer-link i {
+            font-size: 1.5rem;
+        }
+    }
+</style>

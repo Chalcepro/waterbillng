@@ -1,0 +1,14 @@
+2025-10-30 20:57:27 - Request: Array
+(
+    [username] => Chalce
+    [email] => glitchtrapsonic@gmail.com
+    [phone] => 07013948480
+    [first_name] => Chalcedony 
+    [surname] => Sokomba
+    [middle_name] => Ariel
+    [flat_no] => No. 03
+    [password] => ShadowFight2
+    [confirm_password] => ShadowFight2
+    [role] => user
+)
+

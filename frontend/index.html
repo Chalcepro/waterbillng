@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaterBill NG - Water Billing Management System</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2e6fff, #1a2746);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .landing-container {
+            text-align: center;
+            color: white;
+            max-width: 500px;
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #2e6fff;
+        }
+        
+        .btn-primary:hover {
+            background: #f8faff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: #2e6fff;
+            transform: translateY(-2px);
+        }
+        
+        .features {
+            margin-top: 50px;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .feature i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .auth-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="landing-container">
+        <img src="assets/images/logo.png" alt="WaterBill NG Logo" class="logo" onerror="this.style.display='none'">
+        <h1>WaterBill NG</h1>
+        <p class="subtitle">Modern Water Billing Management System</p>
+        
+        <div class="auth-buttons">
+            <a href="/waterbill/frontend/auth/login.html" class="btn btn-primary">Login</a>
+            <a href="/waterbill/frontend/register.html" class="btn btn-secondary">Register</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-credit-card"></i>
+                <span>Easy online payments with multiple methods</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-chart-line"></i>
+                <span>Real-time subscription tracking</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bell"></i>
+                <span>Automated notifications and reminders</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Mobile-first responsive design</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/waterbill/api/auth/check-session.php', {
+                  method: 'GET',
+                  credentials: 'include', // include cookies if using PHP sessions
+                  headers: { 'Accept': 'application/json' }
+                });
+
+                const result = await response.json();
+                
+                if (result.authenticated) {
+                    // Redirect based on role
+                    if (result.role === 'admin') {
+                        window.location.href = '/waterbill/frontend/admin/dashboard.html';
+                    } else {
+                        window.location.href = '/waterbill/frontend/user/dashboard.html';
+                    }
+                }
+            } catch (error) {
+                // User not logged in, stay on landing page
+                console.log('User not authenticated');
+            }
+        });
+    </script>
+</body>
+</html>

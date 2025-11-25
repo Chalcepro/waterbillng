@@ -1,0 +1,103 @@
+<!-- This is a legacy version of the admin header. The new responsive header is in admin-header-responsive.html -->
+<style>
+    /* Admin Header */
+    .admin-header {
+        background: #2c3e50;
+        color: white;
+        padding: 15px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+    
+    .logo img {
+        height: 32px;
+        width: auto;
+    }
+    
+    /* Back button */
+    .back-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    
+    .back-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Add padding to body to account for fixed header */
+    body {
+        padding-top: 70px;
+    }
+</style>
+
+<!-- Admin Header -->
+<header class="admin-header">
+    <div class="admin-container">
+        <button class="back-btn" id="backBtn" style="display: none;">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Dashboard</span>
+        </button>
+        <a href="dashboard.html" class="logo">
+            <img src="../assets/logo.png" alt="WaterBill NG Logo">
+            <span>WaterBill NG</span>
+        </a>
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+    const isDashboard = currentPage === 'dashboard.html';
+    
+    // Show back button on all pages except dashboard
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.style.display = isDashboard ? 'none' : 'flex';
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+    }
+    
+    // Highlight current page in navigation (only on dashboard)
+    if (isDashboard) {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            const href = btn.getAttribute('href');
+            if (href === currentPage) {
+                btn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+            }
+        });
+    }
+});
+</script>

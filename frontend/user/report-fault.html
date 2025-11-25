@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Fault - WaterBill NG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #11c0d4 0%, #039ed1 100%);
+            --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Styling - Hidden on tablet/mobile */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--gradient-secondary);
+            color: #fff;
+            padding: 15px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container img {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+        }
+
+        .logo-container h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--gradient-secondary);
+            color: white;
+            padding-top: 80px;
+            transition: 0.3s;
+            z-index: 999;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 30px;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for sidebar */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Report Content */
+        .report-content {
+            padding: 30px 20px 120px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(3, 158, 209, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Report Form */
+        .report-form {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .report-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+
+        .form-group select,
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fff;
+            font-family: inherit;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(3, 158, 209, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        /* File Upload Styling */
+        .file-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: #fafafa;
+        }
+        
+        .file-upload:hover, .file-upload.highlight {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+        
+        .file-upload-label {
+            display: block;
+            padding: 10px;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .file-input {
+            display: none;
+        }
+
+        #file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(3, 158, 209, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(3, 158, 209, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid transparent;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .alert-success {
+            background: rgba(46, 204, 113, 0.1);
+            color: #155724;
+            border-color: rgba(46, 204, 113, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: #721c24;
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================== */
+        /* REDESIGNED MOBILE FOOTER - Enhanced */
+        /* ==================== */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 1;
+            max-width: 70px;
+            padding: 5px 0;
+        }
+        
+        .footer-link i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-link span {
+            font-size: 0.65rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.1;
+        }
+        
+        .footer-link.active,
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-link.active i,
+        .footer-link:hover i {
+            transform: scale(1.1);
+        }
+        
+        .footer-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            width: 5px;
+            height: 5px;
+            background: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 70px;
+            left: 10px;
+            right: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            z-index: 1001;
+            display: none;
+        }
+
+        .mobile-dropdown.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        .mobile-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .mobile-dropdown-item:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .mobile-dropdown-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .mobile-dropdown-item span {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Hide header on tablet and mobile */
+        @media (max-width: 992px) {
+            header {
+                display: none;
+            }
+            
+            .report-content {
+                padding: 20px 15px 100px 15px;
+            }
+        }
+
+        /* Adjust for very small screens */
+        @media (max-width: 576px) {
+            .mobile-footer {
+                padding: 10px 0;
+            }
+            
+            .footer-link {
+                max-width: 65px;
+            }
+            
+            .footer-link i {
+                font-size: 1.1rem;
+            }
+            
+            .footer-link span {
+                font-size: 0.6rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .page-header p {
+                font-size: 0.9rem;
+            }
+            
+            .report-form {
+                padding: 20px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .file-upload {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .report-content {
+                padding: 15px 10px 90px 10px;
+            }
+            
+            .page-header {
+                padding: 20px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .page-header p {
+                font-size: 0.85rem;
+            }
+            
+            .report-form {
+                padding: 15px;
+            }
+        }
+        
+        /* Show header only on desktop */
+        @media (min-width: 993px) {
+            .mobile-footer {
+                display: none;
+            }
+        }
+        
+        /* Animation for footer appearance */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .mobile-footer {
+            animation: slideUp 0.5s ease;
+        }
+
+        /* Header responsive adjustments */
+        @media (max-width: 1200px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            nav a {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            nav {
+                gap: 5px;
+                flex-wrap: wrap;
+                    justify-content: flex-end;
+            }
+            
+            nav a {
+                font-size: 12px;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header - Hidden on tablet/mobile -->
+    <header>
+        <div class="logo-container">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+            <h1>WaterBill NG</h1>
+        </div>
+        
+        <button class="hamburger" id="menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a>
+            <a href="history.html"><i class="fas fa-history"></i> History</a>
+            <a href="../includes/communityperformance.php"><i class="fas fa-chart-line"></i> Performance</a>
+            <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            <a href="#" onclick="logout()" style="color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="payment.html"><i class="fas fa-credit-card"></i> Make Payment</a>
+        <a href="history.html"><i class="fas fa-history"></i> Payment History</a>
+        <a href="../includes/communityperformance.php"><i class="fas fa-chart-line"></i> Community Performance</a>
+        <a href="report-fault.html"><i class="fas fa-exclamation-triangle"></i> Report Fault</a>
+        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+        <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Report Content -->
+    <div class="report-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Report a Fault</h1>
+            <p>Tell us what went wrong so we can fix it quickly</p>
+        </div>
+
+        <!-- Report Form -->
+        <div class="report-form">
+            <div id="alert-container"></div>
+            
+            <form id="faultForm">
+                <div class="form-group">
+                    <label for="category"><i class="fas fa-tag"></i> Issue Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="leak">Water Leak</option>
+                        <option value="no_water">No Water Supply</option>
+                        <option value="low_pressure">Low Water Pressure</option>
+                        <option value="dirty_water">Dirty Water</option>
+                        <option value="meter_issue">Meter Issue</option>
+                        <option value="billing">Billing Problem</option>
+                        <option value="other">Other Issue</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description"><i class="fas fa-align-left"></i> Description</label>
+                    <textarea id="description" name="description" placeholder="Please describe the issue in detail. Include location, time it started, and any other relevant information..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo"><i class="fas fa-camera"></i> Photo Evidence (Optional)</label>
+                    <div class="file-upload" id="fileUploadArea">
+                        <input type="file" id="photo" name="photo" class="file-input" accept="image/*">
+                        <div class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose photo or drag & drop</span>
+                        </div>
+                        <div id="file-name" class="mt-2 text-muted">No file selected</div>
+                    </div>
+                    <small class="text-muted">Max file size: 5MB. Supported formats: JPG, PNG, GIF</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset Form
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- REDESIGNED MOBILE FOOTER - Primary Navigation -->
+    <!-- ==================== -->
+    <footer class="mobile-footer" role="navigation" aria-label="Primary">
+        <a href="dashboard.html" class="footer-link">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="payment.html" class="footer-link">
+            <i class="fas fa-wallet"></i>
+            <span>Payments</span>
+        </a>
+        <a href="history.html" class="footer-link">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="../includes/communityperformance.php" class="footer-link">
+            <i class="fas fa-chart-line"></i>
+            <span>Performance</span>
+        </a>
+        <a href="#" class="footer-link" id="more-menu">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </a>
+    </footer>
+
+    <!-- Mobile Dropdown Menu -->
+    <div class="mobile-dropdown" id="mobile-dropdown">
+        <a href="profile.html" class="mobile-dropdown-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+        <a href="report-fault.html" class="mobile-dropdown-item">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Report Fault</span>
+        </a>
+        <a href="notifications.html" class="mobile-dropdown-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="#" class="mobile-dropdown-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+    <!-- ==================== -->
+    <!-- END REDESIGNED MOBILE FOOTER -->
+    <!-- ==================== -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Report Fault page initializing...');
+            
+            try {
+                // Check authentication
+                if (window.AuthGuard) {
+                    const session = await AuthGuard.requireUser();
+                    if (!session) return;
+                } else {
+                    await checkAuth();
+                }
+                
+                // Setup components
+                setupForm();
+                setupFileUpload();
+                setupSidebar();
+                setupMobileMenu();
+                
+                console.log('Report Fault page initialized successfully');
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                showAlert('Page initialization failed: ' + error.message, 'error');
+            }
+        });
+
+        // Setup mobile dropdown menu
+        function setupMobileMenu() {
+            const moreMenu = document.getElementById('more-menu');
+            const dropdown = document.getElementById('mobile-dropdown');
+            const overlay = document.getElementById('overlay');
+
+            if (moreMenu && dropdown) {
+                moreMenu.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('show');
+                    
+                    if (overlay) {
+                        if (dropdown.classList.contains('show')) {
+                            overlay.classList.add('show');
+                        } else {
+                            overlay.classList.remove('show');
+                        }
+                    }
+                });
+
+                // Close dropdown when clicking overlay
+                if (overlay) {
+                    overlay.addEventListener('click', function() {
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                    });
+                }
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!moreMenu.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        if (overlay) {
+                            overlay.classList.remove('show');
+                        }
+                    }
+                });
+            }
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('../../api/auth/check-session.php', { 
+                    credentials: 'include' 
+                });
+                const result = await response.json();
+                
+                if (!result.authenticated) {
+                    window.location.href = '../auth/login.html';
+                    return;
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '../auth/login.html';
+            }
+        }
+
+        function setupForm() {
+            const form = document.getElementById('faultForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+                    form.reset();
+                    document.getElementById('file-name').textContent = 'No file selected';
+                    document.getElementById('fileUploadArea').classList.remove('highlight');
+                    showAlert('Form has been reset', 'success');
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                const category = document.getElementById('category').value;
+                const description = document.getElementById('description').value.trim();
+                
+                if (!category) {
+                    showAlert('Please select an issue category', 'error');
+                    return;
+                }
+                
+                if (!description || description.length < 10) {
+                    showAlert('Please provide a detailed description (at least 10 characters)', 'error');
+                    return;
+                }
+
+                // Show loading state
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner"></span> Submitting Report...';
+
+                try {
+                    const formData = new FormData(form);
+                    
+                    // Add additional metadata
+                    formData.append('timestamp', new Date().toISOString());
+                    formData.append('user_agent', navigator.userAgent);
+                    
+                    const response = await fetch('../../api/user/report-fault.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showAlert(result.message || 'Fault report submitted successfully! Our team will review it shortly.', 'success');
+                        
+                        // Show success notification
+                        if (window.notify) {
+                            notify.success(result.message || 'Fault reported successfully');
+                        }
+                        
+                        // Reset form on success
+                        form.reset();
+                        document.getElementById('file-name').textContent = 'No file selected';
+                        document.getElementById('fileUploadArea').classList.remove('highlight');
+                        
+                    } else {
+                        throw new Error(result.error || result.message || 'Failed to submit report');
+                    }
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    showAlert(error.message || 'Failed to submit report. Please try again.', 'error');
+                    
+                    // Show error notification
+                    if (window.notify) {
+                        notify.error(error.message || 'Failed to submit report');
+                    }
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+
+        function setupFileUpload() {
+            const fileInput = document.getElementById('photo');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileName = document.getElementById('file-name');
+
+            if (!fileInput || !fileUploadArea || !fileName) {
+                console.error('File upload elements not found');
+                return;
+            }
+            
+            // Handle click on upload area
+            fileUploadArea.addEventListener('click', function(e) {
+                if (e.target !== fileInput) {
+                    fileInput.click();
+                }
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function(e) {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                    // Validate file type
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                    if (!validTypes.includes(selectedFile.type)) {
+                        fileName.textContent = 'Error: Please select a valid image file (JPG, PNG, GIF)';
+                        fileName.style.color = '#e74c3c';
+                        fileUploadArea.style.borderColor = '#e74c3c';
+                        fileInput.value = ''; // Clear invalid file
+                        return;
+                    }
+                    
+                    // Validate file size (5MB max)
+                    if (selectedFile.size > 5 * 1024 * 1024) {
+                        fileName.textContent = 'Error: File size must be less than 5MB';
+                        fileName.style.color = '#e74c3c';
+                        fileUploadArea.style.borderColor = '#e74c3c';
+                        fileInput.value = ''; // Clear invalid file
+                        return;
+                    }
+                    
+                    fileName.textContent = `Selected: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(2)} KB)`;
+                    fileName.style.color = '#27ae60';
+                    fileUploadArea.style.borderColor = '#27ae60';
+                } else {
+                    fileName.textContent = 'No file selected';
+                    fileName.style.color = '#6b7280';
+                    fileUploadArea.style.borderColor = '#d1d5db';
+                }
+            });
+            
+            // Handle drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                fileUploadArea.classList.add('highlight');
+                fileUploadArea.style.borderColor = '#039ed1';
+                fileUploadArea.style.backgroundColor = 'rgba(3, 158, 209, 0.05)';
+            }
+            
+            function unhighlight() {
+                fileUploadArea.classList.remove('highlight');
+                fileUploadArea.style.borderColor = '#d1d5db';
+                fileUploadArea.style.backgroundColor = '';
+            }
+            
+            fileUploadArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length) {
+                    const droppedFile = files[0];
+                    
+                    // Validate dropped file
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                    if (validTypes.includes(droppedFile.type) && droppedFile.size <= 5 * 1024 * 1024) {
+                        fileInput.files = files;
+                        fileName.textContent = `Selected: ${droppedFile.name} (${(droppedFile.size / 1024).toFixed(2)} KB)`;
+                        fileName.style.color = '#27ae60';
+                        fileUploadArea.style.borderColor = '#27ae60';
+                    } else {
+                        fileName.textContent = 'Error: Please drop a valid image file (JPG, PNG, GIF) under 5MB';
+                        fileName.style.color = '#e74c3c';
+                        fileUploadArea.style.borderColor = '#e74c3c';
+                    }
+                }
+                
+                unhighlight();
+            }
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            if (container) {
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+                container.innerHTML = `
+                    <div class="alert alert-${type}">
+                        <i class="fas ${icon}"></i>
+                        ${message}
+                    </div>
+                `;
+                
+                // Auto-hide success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        container.innerHTML = '';
+                    }, 5000);
+                }
+            } else {
+                // Fallback if container doesn't exist
+                alert(message);
+            }
+        }
+
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await fetch('../../api/auth/logout.php', { 
+                        method: 'POST', 
+                        credentials: 'include' 
+                    });
+                    window.location.href = '../auth/login.html';
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                    window.location.href = '../auth/login.html';
+                }
+            }
+        }
+
+        function setupSidebar() {
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (menuBtn && sidebar && overlay) {
+                menuBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('show');
+                    overlay.classList.toggle('show');
+                });
+                
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+            }
+        }
+    </script>
+
+    <!-- External Scripts -->
+    <script src="../assets/js/notify.js"></script>
+    <script src="../assets/js/auth-guard.js"></script>
+    
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

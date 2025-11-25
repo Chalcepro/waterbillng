@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - WaterBill NG</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #11c0d4 0%, #039ed1 100%);
+            --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --gradient-blue: linear-gradient(180deg, #11c0d4 0%, #08a9d4 40%, #04a0c9 60%, #039ed1 100%);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            color: #333;
+            padding-top: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+        
+        /* Header Styling - Matches WaterBill NG Brand */
+        .navbar {
+            background: var(--gradient-secondary) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 32px;
+            margin-right: 10px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white !important;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        
+        /* Hide header on tablet and mobile */
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            body {
+                padding-top: 0;
+            }
+        }
+        
+        /* Show header only on desktop */
+        @media (min-width: 992px) {
+            body {
+                padding-top: 70px;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+                flex-direction: column;
+            }
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            background: var(--primary-light);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .stat-card .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0.5rem 0;
+            color: var(--secondary-color);
+        }
+        
+        .stat-card .stat-label {
+            color: #6c757d;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Action Cards */
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: var(--secondary-color);
+            display: block;
+            height: 100%;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .action-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .action-card .action-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        /* Table Styling */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .table th {
+            background: var(--gradient-secondary);
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+            border: none;
+        }
+        
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-color: #f1f5f9;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-approved {
+            background: rgba(46, 204, 113, 0.15);
+            color: #27ae60;
+        }
+        
+        .status-pending {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+        }
+        
+        .status-rejected {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        /* Settings List */
+        .settings-list .setting-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .settings-list .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .setting-value {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 158, 209, 0.3);
+        }
+        
+        .btn-outline-secondary {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        /* ==================== */
+        /* SIMPLE DESKTOP FOOTER */
+        /* ==================== */
+        .desktop-simple-footer {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .desktop-simple-footer p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Hide simple footer on tablet/mobile */
+        @media (max-width: 991.98px) {
+            .desktop-simple-footer {
+                display: none !important;
+            }
+        }
+        
+        /* ==================== */
+        /* MOBILE FOOTER STYLES */
+        /* ==================== */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+        
+        .mobile-footer-item:hover {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .mobile-dropdown .dropdown-item.active,
+        .mobile-dropdown .dropdown-item:active {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .mobile-dropdown .dropdown-divider {
+            margin: 5px 0;
+        }
+        
+        /* Logout button styling */
+        .mobile-footer-item.logout {
+            color: #e74c3c;
+        }
+        
+        .mobile-footer-item.logout:hover {
+            color: #c0392b;
+        }
+        
+        /* Hide mobile footer on desktop */
+        @media (min-width: 992px) {
+            .mobile-footer {
+                display: none !important;
+            }
+        }
+        
+        /* Add padding to main content for mobile footer */
+        @media (max-width: 991.98px) {
+            .main-content {
+                padding-bottom: 80px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(3, 158, 209, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .logo-container {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            border-radius: 8px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Header - Only visible on desktop -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+                <span>WaterBill NG</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="fas fa-users me-1"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="payments.html">
+                            <i class="fas fa-credit-card me-1"></i> Payments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../inlcudes/communityperformance.php">
+                            <i class="fas fa-chart-line me-1"></i> Performance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="fas fa-chart-bar me-1"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="notifications.html">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4 main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1>Dashboard Overview</h1>
+                    <p class="mb-0">Welcome back! Here's what's happening with your system today.</p>
+                </div>
+                <div class="d-flex gap-2 mt-3 mt-md-0">
+                    <button class="btn btn-outline-secondary" onclick="exportReports('csv')">
+                        <i class="fas fa-download me-1"></i> Export CSV
+                    </button>
+                    <button class="btn btn-primary" onclick="exportReports('all')">
+                        <i class="fas fa-file-archive me-1"></i> Export All
+                    </button>
+                    <!-- Add refresh button -->
+                    <button class="btn btn-outline-primary" onclick="refreshDashboard()" title="Refresh Data" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="dashboard-card stat-card">
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value" id="total-users">
+                        <span class="loading-spinner"></span>
+                    </div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="dashboard-card stat-card">
+                    <div class="icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="pending-payments">
+                        <span class="loading-spinner"></span>
+                    </div>
+                    <div class="stat-label">Pending Payments</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="dashboard-card stat-card">
+                    <div class="icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-value" id="active-subscriptions">
+                        <span class="loading-spinner"></span>
+                    </div>
+                    <div class="stat-label">Active Subscriptions</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="dashboard-card stat-card">
+                    <div class="icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-value" id="open-faults">
+                        <span class="loading-spinner"></span>
+                    </div>
+                    <div class="stat-label">Open Fault Reports</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="row g-4">
+            <!-- Recent Payments -->
+            <div class="col-lg-6">
+                <div class="dashboard-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0">Recent Payments</h3>
+                        <a href="payments.html" class="btn btn-sm btn-outline-secondary">View All</a>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-payments-body">
+                                <!-- Recent payments will be loaded here -->
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <div>Loading payments data...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-lg-3">
+                <div class="dashboard-card mb-4">
+                    <h3 class="mb-3">Quick Actions</h3>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="payments.html" class="action-card">
+                                <i class="fas fa-credit-card"></i>
+                                <div class="action-title">Approve Payments</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="users.html" class="action-card">
+                                <i class="fas fa-users"></i>
+                                <div class="action-title">Manage Users</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="reports.html" class="action-card">
+                                <i class="fas fa-chart-bar"></i>
+                                <div class="action-title">View Reports</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="notifications.html" class="action-card">
+                                <i class="fas fa-bell"></i>
+                                <div class="action-title">Send Notification</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="col-lg-3">
+                <div class="dashboard-card">
+                    <h3 class="mb-3">System Settings</h3>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div class="setting-label">System Status</div>
+                            <div class="setting-value" id="system-status">Online</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Last Backup</div>
+                            <div class="setting-value" id="last-backup">Today, 02:00 AM</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Storage Used</div>
+                            <div class="setting-value" id="storage-used">250 MB / 5 GB</div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="settings.html" class="btn btn-primary w-100">Manage Settings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item active" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <li><a class="dropdown-item" href="performance.html"><i class="fas fa-chart-line me-2"></i>Performance</a></li>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-file-alt me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" id="logout-mobile"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ---------- INI / safeFetch bootstrap ---------- -->
+<script>
+  (function () {
+    const DEBUG = true;
+    window.debugLog = (...args) => { if (DEBUG) console.log('[DBG]', ...args); };
+
+    window.INI = window.INI || {
+      API_BASE_URL: '/waterbill/api',
+      LOGIN_PAGE: '/waterbill/frontend/auth/login.html',
+      USER_DASHBOARD: '/waterbill/frontend/user/dashboard.html',
+      ADMIN_DASHBOARD: '/waterbill/frontend/admin/dashboard.html',
+      CHECK_SESSION: '/waterbill/api/auth/check-session.php',
+      ADMIN_DASHBOARD_DATA: '/waterbill/api/admin/admin-dashboard-data.php',
+      REDIRECT_MAX_ATTEMPTS: 3,
+      FETCH_TIMEOUT_MS: 15000
+    };
+
+    window.safeRedirect = function (url, reason = '') {
+      try {
+        const key = 'wb_redirect_count';
+        const now = Date.now();
+        const entry = JSON.parse(sessionStorage.getItem(key) || '{}');
+        const attempts = entry.attempts ? entry.attempts + 1 : 1;
+        const firstTs = entry.firstTs || now;
+        sessionStorage.setItem(key, JSON.stringify({ attempts, firstTs }));
+        debugLog('safeRedirect', url, 'attempt', attempts, 'reason', reason);
+
+        if (attempts > window.INI.REDIRECT_MAX_ATTEMPTS && (now - firstTs) < 60000) {
+          console.warn('Too many redirects in short time — not redirecting to avoid loop.');
+          alert('Authentication service unreachable. Try reloading or use a private window.');
+          return;
+        }
+
+        window.location.replace(url);
+      } catch (e) {
+        console.error('safeRedirect error', e);
+        window.location.replace(url);
+      }
+    };
+
+    window.resetRedirectCounter = function () {
+      try { sessionStorage.removeItem('wb_redirect_count'); } catch (e) {}
+    };
+
+    window.safeFetch = async function (url, opts = {}) {
+      const controller = new AbortController();
+      const timeout = opts.timeout ?? window.INI.FETCH_TIMEOUT_MS;
+      const signal = controller.signal;
+      const cfg = Object.assign({
+        credentials: 'include',
+        headers: Object.assign({ 'Accept': 'application/json' }, opts.headers || {})
+      }, opts, { signal });
+
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        const res = await fetch(url, cfg);
+        clearTimeout(timer);
+        const text = await res.text();
+        const contentType = (res.headers.get('Content-Type') || '').toLowerCase();
+
+        if (contentType.indexOf('application/json') === -1 || text.trim().startsWith('<')) {
+          return { ok: res.ok, status: res.status, json: null, text, contentType };
+        }
+        try {
+          const json = JSON.parse(text);
+          return { ok: res.ok, status: res.status, json, text, contentType };
+        } catch (parseErr) {
+          return { ok: res.ok, status: res.status, json: null, text, contentType };
+        }
+      } catch (err) {
+        clearTimeout(timer);
+        debugLog('safeFetch error', err);
+        throw err;
+      }
+    };
+
+    window.isOnLoginPage = function () {
+      try {
+        return location.pathname.includes('/auth/login.html') || location.pathname.includes('/auth/register.html');
+      } catch (e) { return false; }
+    };
+
+    debugLog('INI bootstrap loaded', window.INI);
+  })();
+</script>
+
+<!-- ---------- Main dashboard script ---------- -->
+<script>
+    // Utility helpers
+    function showLoading() {
+      document.querySelectorAll('.stat-value').forEach(el => {
+        if (el) el.innerHTML = '<div class="loading-spinner"></div>';
+      });
+    }
+
+    function showNotification(message, type = 'error') {
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show position-fixed`;
+      notification.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+      notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        if (notification.parentNode) notification.remove();
+      }, 5000);
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      try {
+        const d = new Date(dateString);
+        return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      } catch (e) {
+        return dateString;
+      }
+    }
+
+    function formatCurrency(amount) {
+      return Number(amount || 0).toLocaleString('en-NG', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    // Check session with safeFetch
+    async function checkSession() {
+      try {
+        debugLog('checkSession -> calling', INI.CHECK_SESSION);
+        const res = await safeFetch(INI.CHECK_SESSION, { method: 'GET' });
+        debugLog('checkSession result', res);
+
+        if (!res.ok) {
+          debugLog('Session not ok, status', res.status);
+          return null;
+        }
+
+        if (!res.json) {
+          debugLog('Session endpoint returned non-JSON', res.text && res.text.slice(0,200));
+          if (!isOnLoginPage()) safeRedirect(INI.LOGIN_PAGE, 'non-json-session-response');
+          return null;
+        }
+
+        const data = res.json;
+        if (data.success && data.user) {
+          resetRedirectCounter();
+          sessionStorage.setItem('user', JSON.stringify(data.user));
+          return data.user;
+        }
+        if (data.authenticated || data.auth === true) {
+          const user = data.user || { role: data.role || 'user', id: data.user_id || null, name: data.name || '' };
+          resetRedirectCounter();
+          sessionStorage.setItem('user', JSON.stringify(user));
+          return user;
+        }
+
+        debugLog('Session says unauthenticated', data);
+        if (!isOnLoginPage()) safeRedirect(INI.LOGIN_PAGE, 'not-authenticated');
+        return null;
+      } catch (err) {
+        console.error('checkSession failed', err);
+        if (!isOnLoginPage()) safeRedirect(INI.LOGIN_PAGE, 'check-error');
+        return null;
+      }
+    }
+
+    // Enhanced dashboard data loading
+    async function loadDashboardData() {
+      try {
+        showLoading();
+        const response = await safeFetch(INI.ADMIN_DASHBOARD_DATA, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
+
+        debugLog('admin-dashboard-data response', response);
+
+        if (!response.ok) {
+          debugLog('admin-dashboard-data non-ok', response.status);
+          if (response.status === 401) {
+            showNotification('Session expired. Redirecting to login...', 'error');
+            setTimeout(() => safeRedirect(INI.LOGIN_PAGE, 'dashboard-data-401'), 700);
+            return;
+          }
+          throw new Error('Server returned non-ok status for dashboard data: ' + response.status);
+        }
+
+        if (!response.json) {
+          debugLog('admin-dashboard-data returned non-json', response.text && response.text.slice(0,200));
+          throw new Error('Invalid server response for dashboard data');
+        }
+
+        const result = response.json;
+        if (!result.success) throw new Error(result.message || 'Failed to load dashboard data');
+
+        const data = result.data || {};
+        debugLog('dashboard data received:', data);
+
+        const totalUsers = data.total_users ?? data.users?.total ?? data.users_count ?? 0;
+        const pendingPayments = data.pending_payments ?? data.payments?.pending ?? data.payments_pending ?? 0;
+
+        const activeSubscriptions = data.active_subscriptions ??
+                                    data.subscriptions?.active ??
+                                    data.subscriptions_count ??
+                                    (Array.isArray(data.subscriptions) ? data.subscriptions.filter(s => s.status === 'active').length : 0) ??
+                                    0;
+
+        const openFaults = data.open_faults ?? data.faults?.open ?? data.fault_reports?.pending ?? 0;
+
+        document.getElementById('total-users').textContent = Number(totalUsers || 0).toLocaleString();
+        document.getElementById('pending-payments').textContent = Number(pendingPayments || 0).toLocaleString();
+        document.getElementById('active-subscriptions').textContent = Number(activeSubscriptions || 0).toLocaleString();
+        document.getElementById('open-faults').textContent = Number(openFaults || 0).toLocaleString();
+
+        // Recent payments - FIXED: Use correct table ID
+        const tbody = document.getElementById('recent-payments-body');
+        const recentPayments = data.recent_payments || data.payments || [];
+
+        if (Array.isArray(recentPayments) && recentPayments.length) {
+          tbody.innerHTML = '';
+          recentPayments.slice(0, 5).forEach(p => {
+            const tr = document.createElement('tr');
+            const amount = (typeof p.amount === 'string' || typeof p.amount === 'number') ? formatCurrency(p.amount) : '0.00';
+            const method = p.method || p.payment_method || p.paymentMethod || 'N/A';
+            const userName = p.user_name || p.name || p.username || 'N/A';
+            const status = (p.status || 'pending').toLowerCase();
+
+            const statusClass = status === 'completed' ? 'bg-success' :
+                                status === 'pending' ? 'bg-warning text-dark' :
+                                'bg-secondary';
+
+            tr.innerHTML = `
+              <td>${userName}</td>
+              <td>₦${amount}</td>
+              <td>${method}</td>
+              <td>${formatDate(p.created_at || p.createdAt || p.date)}</td>
+              <td><span class="badge ${statusClass}">${(status || '').toUpperCase()}</span></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No recent payments found</td></tr>';
+        }
+
+        showNotification('Dashboard data loaded successfully', 'success');
+
+      } catch (err) {
+        console.error('Error loading dashboard data:', err);
+        showNotification('Failed to load dashboard data: ' + (err.message || 'Unknown error'), 'error');
+        loadMockData();
+      }
+    }
+
+    function loadMockData() {
+      const mockData = {
+        total_users: 1542,
+        pending_payments: 23,
+        active_subscriptions: 1247,
+        open_faults: 8,
+        recent_payments: [
+          { user_name: 'John Doe', amount: 15000, method: 'Bank Transfer', created_at: new Date().toISOString(), status: 'completed' },
+          { user_name: 'Jane Smith', amount: 12000, method: 'Card', created_at: new Date(Date.now() - 86400000).toISOString(), status: 'pending' }
+        ]
+      };
+
+      document.getElementById('total-users').textContent = mockData.total_users.toLocaleString();
+      document.getElementById('pending-payments').textContent = mockData.pending_payments.toLocaleString();
+      document.getElementById('active-subscriptions').textContent = mockData.active_subscriptions.toLocaleString();
+      document.getElementById('open-faults').textContent = mockData.open_faults.toLocaleString();
+
+      const tbody = document.getElementById('recent-payments-body');
+      tbody.innerHTML = '';
+      mockData.recent_payments.forEach(p => {
+        const tr = document.createElement('tr');
+        const statusClass = p.status === 'completed' ? 'bg-success' : 'bg-warning text-dark';
+        tr.innerHTML = `
+          <td>${p.user_name}</td>
+          <td>₦${formatCurrency(p.amount)}</td>
+          <td>${p.method}</td>
+          <td>${formatDate(p.created_at)}</td>
+          <td><span class="badge ${statusClass}">${p.status.toUpperCase()}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      showNotification('Loaded demo data (backend not available)', 'info');
+    }
+
+    function exportReports(format) {
+      try {
+        if (format === 'csv') {
+          const headers = ['User', 'Amount', 'Method', 'Date', 'Status'];
+          const rows = [
+            ['John Doe', '15000', 'Bank Transfer', new Date().toLocaleDateString(), 'Completed'],
+            ['Jane Smith', '12000', 'Card', new Date().toLocaleDateString(), 'Pending']
+          ];
+
+          let csv = headers.join(',') + '\n';
+          rows.forEach(row => {
+            csv += row.join(',') + '\n';
+          });
+
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `payments-export-${new Date().toISOString().split('T')[0]}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          showNotification('CSV export started successfully', 'success');
+        } else {
+          showNotification('Full export feature coming soon', 'info');
+        }
+      } catch (e) {
+        console.error(e);
+        showNotification('Export failed: ' + e.message, 'error');
+      }
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        fetch(`${INI.API_BASE_URL}/auth/logout.php`, {
+          method: 'POST',
+          credentials: 'include'
+        }).finally(() => {
+          window.location.replace(INI.LOGIN_PAGE);
+        });
+      }
+    }
+
+    let _dashboardInitializing = false;
+    async function initDashboard() {
+      if (_dashboardInitializing) return;
+      _dashboardInitializing = true;
+
+      try {
+        const user = await checkSession();
+        if (!user) return;
+
+        if ((user.role || '').toLowerCase() !== 'admin') {
+          window.location.replace(INI.USER_DASHBOARD);
+          return;
+        }
+
+        resetRedirectCounter();
+        await loadDashboardData();
+
+        setInterval(() => {
+          if (!_dashboardInitializing) loadDashboardData();
+        }, 5 * 60 * 1000);
+
+      } finally {
+        _dashboardInitializing = false;
+      }
+    }
+
+    function refreshDashboard() {
+      loadDashboardData();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fix logout button selectors for your current HTML
+      const logoutDesktop = document.getElementById('logout-desktop');
+      if (logoutDesktop) {
+        logoutDesktop.addEventListener('click', (e) => {
+          e.preventDefault(); 
+          logout();
+        });
+      }
+
+      const logoutMobile = document.getElementById('logout-mobile');
+      if (logoutMobile) {
+        logoutMobile.addEventListener('click', (e) => {
+          e.preventDefault(); 
+          logout();
+        });
+      }
+
+      document.getElementById('refresh-btn')?.addEventListener('click', () => {
+        loadDashboardData();
+      });
+
+      initDashboard();
+    });
+</script>
+</body>
+</html>

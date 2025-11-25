@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - WaterBill NG</title>
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --text-light: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(180deg, #11c0d4 0%, #08a9d4 40%, #04a0c9 60%, var(--primary-color) 100%);
+            overflow-x: hidden;
+        }
+
+        .auth-bg-waves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .auth-bg-waves::before, .auth-bg-waves::after {
+            content: '';
+            position: absolute;
+            left: -10%;
+            right: -10%;
+            height: 40vh;
+            border-bottom-left-radius: 50% 40%;
+            border-bottom-right-radius: 50% 40%;
+            background: radial-gradient(60% 80% at 50% 20%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 60%, rgba(255,255,255,0.08) 100%);
+            top: -22vh;
+            filter: blur(0.3px);
+        }
+
+        .auth-bg-waves::after {
+            top: auto;
+            bottom: -22vh;
+            border-top-left-radius: 50% 40%;
+            border-top-right-radius: 50% 40%;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+
+        .auth-input {
+            border-radius: 999px;
+            padding: 12px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(3, 158, 209, 0.25);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .btn-teal {
+            background: #0d6e7a;
+            border-radius: 999px;
+            border: none;
+            padding: 12px 24px;
+            color: white;
+            font-weight: 500;
+            width: 100%;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-teal:hover {
+            background: #0a5962;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            border-left: 4px solid #ff6b6b;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .success {
+            color: #51cf66;
+            background: rgba(81, 207, 102, 0.1);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            border-left: 4px solid #51cf66;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .link-light {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .link-light:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .text-muted {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .small {
+            font-size: 0.875rem;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        .position-absolute {
+            position: absolute;
+        }
+
+        .top-50 {
+            top: 50%;
+        }
+
+        .end-0 {
+            right: 0;
+        }
+
+        .translate-middle-y {
+            transform: translateY(-50%);
+        }
+
+        .progress {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .step.active {
+            background: #0d6e7a;
+            color: white;
+            border-color: #0d6e7a;
+            transform: scale(1.1);
+        }
+
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: -1;
+            transform: translateY(-50%);
+            margin: 0 18px;
+        }
+
+        .step-progress {
+            height: 100%;
+            background: #0d6e7a;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+
+        .strength-label {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .auth-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .step {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            
+            .step-line {
+                margin: 0 16px;
+            }
+        }
+
+        /* Form section transitions */
+        .form-section {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Button states */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Toggle password button */
+        .toggle-password {
+            background: none;
+            border: none;
+            color: #0d6e7a;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .auth-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 39, 70, 0.8);
+            color: white;
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .footer-links {
+                gap: 15px;
+            }
+        }
+
+        /* Button container for step 2 */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .button-container .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-bg-waves"></div>
+    
+    <div class="auth-container">
+        <img src="../assets/logo.png" alt="WaterBill NG Logo" class="logo" onerror="this.style.display='none'">
+        <h2 class="text-center text-white mb-4" style="text-shadow: 0 2px 10px rgba(0,0,0,0.2)">Create Account</h2>
+        
+        <div id="error-message" class="error" style="display: none;"></div>
+        <div id="success-message" class="success" style="display: none;"></div>
+        
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="d-flex justify-content-between position-relative">
+                <div class="step active" data-step="1">1</div>
+                <div class="step" data-step="2">2</div>
+                <div class="step-line">
+                    <div class="step-progress" id="step-progress"></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+                <span class="small text-muted">Personal Info</span>
+                <span class="small text-muted">Account Details</span>
+            </div>
+        </div>
+        
+        <form id="register-form" autocomplete="on">
+            <!-- Step 1: Personal Information -->
+            <div id="step1" class="form-section">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input class="auth-input" type="text" name="username" id="username" placeholder="Choose a unique username" required minlength="3">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input class="auth-input" type="email" name="email" id="email" placeholder="your.email@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input class="auth-input" type="tel" name="phone" id="phone" placeholder="11-digit phone number" 
+                           inputmode="numeric" pattern="\d{11}" maxlength="11" required>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input class="auth-input" type="text" name="first_name" id="first_name" placeholder="First Name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input class="auth-input" type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="middle_name" class="form-label">Middle Name <span class="text-muted small">(Optional)</span></label>
+                    <input class="auth-input" type="text" name="middle_name" id="middle_name" placeholder="Middle Name (Optional)">
+                </div>
+                
+                <button type="button" id="next-btn" class="btn-teal">
+                    Continue <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+                
+                <div class="text-center mt-3">
+                    <span class="small text-muted">Already have an account? <a class="link-light" href="login.html">Sign In</a></span>
+                </div>
+            </div>
+
+            <!-- Step 2: Account Details -->
+            <div id="step2" class="form-section" style="display:none">
+                <div class="form-group">
+                    <label for="flat_no" class="form-label">Flat Number</label>
+                    <input class="auth-input" type="text" name="flat_no" id="flat_no" placeholder="e.g., Flat 5A" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="position-relative">
+                        <input class="auth-input" type="password" name="password" id="password" placeholder="Create a strong password" required minlength="8">
+                        <button type="button" class="toggle-password" id="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="progress">
+                            <div class="progress-bar" id="password-strength-bar"></div>
+                        </div>
+                        <div class="strength-label" id="password-strength-label">Password strength</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                    <div class="position-relative">
+                        <input class="auth-input" type="password" name="confirm_password" id="confirm_password" placeholder="Confirm your password" required minlength="8">
+                        <button type="button" class="toggle-password" id="toggle-confirm-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role" class="form-label">Account Type</label>
+                    <select class="auth-input" name="role" id="role" required>
+                        <option value="">Select account type</option>
+                        <option value="user">Regular User</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" id="back-btn" class="btn-outline-light">
+                        <i class="fas fa-arrow-left me-2"></i> Back
+                    </button>
+                    <button type="submit" id="register-btn" class="btn-teal">
+                        <i class="fas fa-user-plus me-2"></i> Create Account
+                    </button>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <span class="small text-muted">Already have an account? <a class="link-light" href="/waterbill/frontend/auth/login.html">Sign In</a></span>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const nextBtn = document.getElementById('next-btn');
+            const backBtn = document.getElementById('back-btn');
+            const registerForm = document.getElementById('register-form');
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            const stepProgress = document.getElementById('step-progress');
+            const steps = document.querySelectorAll('.step');
+            
+            // Password elements
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const toggleConfirmPasswordBtn = document.getElementById('toggle-confirm-password');
+            const passwordStrengthBar = document.getElementById('password-strength-bar');
+            const passwordStrengthLabel = document.getElementById('password-strength-label');
+            
+            // Current step tracking
+            let currentStep = 1;
+            
+            // Initialize the form
+            function initForm() {
+                // Phone number formatting
+                const phoneInput = document.getElementById('phone');
+                if (phoneInput) {
+                    phoneInput.addEventListener('input', function(e) {
+                        this.value = this.value.replace(/[^\d]/g, '').slice(0, 11);
+                    });
+                }
+                
+                // Toggle password visibility
+                if (togglePasswordBtn && passwordInput) {
+                    togglePasswordBtn.addEventListener('click', function() {
+                        const type = passwordInput.type === 'password' ? 'text' : 'password';
+                        passwordInput.type = type;
+                        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                    });
+                }
+                
+                if (toggleConfirmPasswordBtn && confirmPasswordInput) {
+                    toggleConfirmPasswordBtn.addEventListener('click', function() {
+                        const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+                        confirmPasswordInput.type = type;
+                        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                    });
+                }
+                
+                // Password strength meter
+                if (passwordInput) {
+                    passwordInput.addEventListener('input', updatePasswordStrength);
+                }
+                
+                // Step navigation
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', goToStep2);
+                }
+                
+                if (backBtn) {
+                    backBtn.addEventListener('click', goToStep1);
+                }
+                
+                // Form submission
+                if (registerForm) {
+                    registerForm.addEventListener('submit', handleFormSubmit);
+                }
+                
+                // Update progress initially
+                updateProgress(1);
+            }
+            
+            // Update progress indicator
+            function updateProgress(step) {
+                if (stepProgress) {
+                    stepProgress.style.width = step === 1 ? '0%' : '100%';
+                }
+                
+                // Update step indicators
+                steps.forEach((stepEl, index) => {
+                    if (index < step) {
+                        stepEl.classList.add('active');
+                    } else {
+                        stepEl.classList.remove('active');
+                    }
+                });
+                
+                currentStep = step;
+            }
+            
+            // Go to step 2
+            function goToStep2() {
+                console.log('Continue button clicked');
+                if (validateStep1()) {
+                    step1.style.display = 'none';
+                    step2.style.display = 'block';
+                    updateProgress(2);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+            
+            // Go back to step 1
+            function goToStep1() {
+                console.log('Back button clicked');
+                step2.style.display = 'none';
+                step1.style.display = 'block';
+                updateProgress(1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // Validate step 1
+            function validateStep1() {
+                const username = document.getElementById('username');
+                const email = document.getElementById('email');
+                const phone = document.getElementById('phone');
+                const firstName = document.getElementById('first_name');
+                const lastName = document.getElementById('last_name');
+                
+                let isValid = true;
+                const errors = [];
+                
+                // Clear previous errors
+                hideMessages();
+                
+                // Basic validation
+                if (!username.value.trim()) {
+                    errors.push('Username is required');
+                    isValid = false;
+                } else if (username.value.trim().length < 3) {
+                    errors.push('Username must be at least 3 characters');
+                    isValid = false;
+                }
+                
+                if (!email.value || !isValidEmail(email.value)) {
+                    errors.push('Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                if (!phone.value || !/^\d{11}$/.test(phone.value)) {
+                    errors.push('Please enter a valid 11-digit phone number');
+                    isValid = false;
+                }
+                
+                if (!firstName.value.trim()) {
+                    errors.push('First name is required');
+                    isValid = false;
+                }
+                
+                if (!lastName.value.trim()) {
+                    errors.push('Last name is required');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    showError(errors.join('<br>'));
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Email validation
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            // Update password strength
+            function updatePasswordStrength() {
+                if (!passwordInput || !passwordStrengthBar || !passwordStrengthLabel) return;
+                
+                const password = passwordInput.value;
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 1;
+                
+                // Contains number
+                if (/\d/.test(password)) strength += 1;
+                
+                // Contains lowercase
+                if (/[a-z]/.test(password)) strength += 1;
+                
+                // Contains uppercase
+                if (/[A-Z]/.test(password)) strength += 1;
+                
+                // Contains special char
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                // Update UI
+                const strengthPercent = (strength / 5) * 100;
+                passwordStrengthBar.style.width = `${strengthPercent}%`;
+                
+                // Set color and label based on strength
+                if (strength <= 1) {
+                    passwordStrengthBar.style.backgroundColor = '#ef4444';
+                    passwordStrengthLabel.textContent = 'Weak password';
+                    passwordStrengthLabel.style.color = '#ef4444';
+                } else if (strength <= 3) {
+                    passwordStrengthBar.style.backgroundColor = '#f59e0b';
+                    passwordStrengthLabel.textContent = 'Moderate password';
+                    passwordStrengthLabel.style.color = '#f59e0b';
+                } else {
+                    passwordStrengthBar.style.backgroundColor = '#10b981';
+                    passwordStrengthLabel.textContent = 'Strong password';
+                    passwordStrengthLabel.style.color = '#10b981';
+                }
+                
+                if (password.length === 0) {
+                    passwordStrengthBar.style.width = '0%';
+                    passwordStrengthLabel.textContent = 'Password strength';
+                    passwordStrengthLabel.style.color = 'rgba(255, 255, 255, 0.7)';
+                }
+            }
+            
+            // Handle form submission
+            // Handle form submission
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    console.log('Form submission started');
+    
+    const registerBtn = document.getElementById('register-btn');
+    if (!registerBtn) return;
+    
+    // Validate step 2
+    if (!validateStep2()) {
+        return;
+    }
+    
+    // Disable button and show loading state
+    registerBtn.disabled = true;
+    registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Creating Account...';
+    
+    // Clear previous messages
+    hideMessages();
+    
+    // Prepare JSON data instead of FormData
+    const formData = {
+        username: document.getElementById('username').value,
+        first_name: document.getElementById('first_name').value,
+        middle_name: document.getElementById('middle_name').value,
+        last_name: document.getElementById('last_name').value,
+        flat_no: document.getElementById('flat_no').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        password: document.getElementById('password').value,
+        confirm_password: document.getElementById('confirm_password').value,
+        role: document.getElementById('role').value
+    };
+    
+    // Debug: Log form data
+    console.log('JSON data being sent:', formData);
+    
+    try {
+        console.log('Sending registration request...');
+        
+        // Send registration request as JSON
+        const response = await fetch('/waterbill/api/auth/register.php', {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        
+        // Get response text
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+        
+        // Try to parse JSON
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch (e) {
+            console.error('Failed to parse JSON response:', e);
+            
+            // Check if it's an HTML error
+            if (responseText.includes('<') || responseText.includes('PHP') || responseText.includes('Error')) {
+                throw new Error('Server error occurred. Please try again later.');
+            } else {
+                throw new Error('Invalid response from server: ' + responseText.substring(0, 100));
+            }
+        }
+        
+        if (result.success) {
+            // Registration successful - redirect to login page
+            showSuccess(result.message || 'Registration successful! Redirecting to login...');
+            
+            // Redirect to login page after success
+            setTimeout(() => {
+                window.location.href = result.redirect || '/waterbill/frontend/auth/login.html';
+            }, 2000);
+        } else {
+            // Registration failed
+            const errorMsg = Array.isArray(result.errors) 
+                ? result.errors.join('<br>') 
+                : (result.message || 'Registration failed. Please try again.');
+            showError(errorMsg);
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        showError('An error occurred: ' + (error.message || 'Please try again later.'));
+    } finally {
+        registerBtn.disabled = false;
+        registerBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i> Create Account';
+    }
+}
+            
+            // Validate step 2
+            function validateStep2() {
+                const flatNo = document.getElementById('flat_no');
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirm_password');
+                const role = document.getElementById('role');
+                
+                let isValid = true;
+                const errors = [];
+                
+                // Clear previous errors
+                hideMessages();
+                
+                // Basic validation
+                if (!flatNo.value.trim()) {
+                    errors.push('Flat number is required');
+                    isValid = false;
+                }
+                
+                if (!password.value) {
+                    errors.push('Password is required');
+                    isValid = false;
+                } else if (password.value.length < 8) {
+                    errors.push('Password must be at least 8 characters long');
+                    isValid = false;
+                }
+                
+                if (password.value !== confirmPassword.value) {
+                    errors.push('Passwords do not match');
+                    isValid = false;
+                }
+                
+                if (!role.value) {
+                    errors.push('Please select an account type');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    showError(errors.join('<br>'));
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Helper functions
+            function showError(message) {
+                if (!errorDiv) return;
+                errorDiv.innerHTML = message;
+                errorDiv.style.display = 'block';
+                
+                // Scroll to error message
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Auto-hide error after 5 seconds
+                setTimeout(hideMessages, 5000);
+            }
+            
+            function showSuccess(message) {
+                if (!successDiv) return;
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                
+                // Scroll to success message
+                successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            function hideMessages() {
+                if (errorDiv) errorDiv.style.display = 'none';
+                if (successDiv) successDiv.style.display = 'none';
+            }
+            
+            // Initialize the form
+            initForm();
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

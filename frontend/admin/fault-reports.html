@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fault Reports - WaterBill NG Admin</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 0;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+        
+        /* Hide desktop header on mobile */
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            
+            body {
+                padding-top: 0;
+                padding-bottom: 70px; /* Space for mobile footer */
+            }
+            
+            /* Optimize form elements for mobile */
+            .form-control, .form-select, .form-check-input {
+                font-size: 16px; /* Prevents zoom on focus in mobile Safari */
+            }
+            
+            /* Adjust layout for mobile */
+            .reports-container {
+                padding: 10px;
+            }
+            
+            .report-card {
+                margin-bottom: 15px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .reports-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .report-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .report-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+        
+        .report-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .status-open { background-color: #fff3cd; color: #856404; }
+        .status-in_progress { background-color: #cce5ff; color: #004085; }
+        .status-resolved { background-color: #d4edda; color: #155724; }
+        .status-rejected { background-color: #f8d7da; color: #721c24; }
+        
+        .report-body {
+            padding: 20px;
+        }
+        
+        #photoModal .modal-dialog {
+            max-width: 90%;
+            max-height: 90vh;
+            margin: 1.75rem auto;
+        }
+        
+        #photoModal .modal-content {
+            background: transparent;
+            border: none;
+        }
+        
+        #photoModal .modal-body {
+            padding: 0;
+            text-align: center;
+        }
+        
+        #modal-photo {
+            max-width: 100%;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .cursor-zoom-in {
+            cursor: zoom-in;
+        }
+        
+        .report-photo {
+            transition: transform 0.2s;
+        }
+        
+        .report-photo:hover {
+            transform: scale(1.05);
+        }
+        
+        .report-photo {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        
+        .report-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .user-info {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .admin-notes {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Responsive Admin Header -->
+    
+    <!-- Desktop Header - Only visible on desktop -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+                <span class="d-none d-md-inline">WaterBill NG Admin</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="dropdown d-none d-lg-block">
+                    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span class="d-none d-md-inline">Admin</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-link text-white d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="reports-container" style="margin-top: 80px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Fault Reports</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" onclick="loadReports()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="status-filter" onchange="loadReports()">
+                            <option value="">All Statuses</option>
+                            <option value="open">Open</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">Search</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search-input" placeholder="Search by category, description, or account number">
+                            <button class="btn btn-outline-secondary" type="button" onclick="loadReports()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reports List -->
+        <div id="reports-list">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading reports...</p>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <nav aria-label="Reports pagination" class="mt-4">
+            <ul class="pagination justify-content-center" id="pagination">
+                <!-- Pagination will be added by JavaScript -->
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Report Details Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Report Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="report-details">
+                    Loading...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Photo Modal -->
+    <div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Photo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modal-photo" src="" alt="Report Photo" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Load responsive admin header -->
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="payments.html"><i class="fas fa-list me-2"></i>All Payments</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=approved"><i class="fas fa-check-circle me-2"></i>Approved</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=rejected"><i class="fas fa-times-circle me-2"></i>Rejected</a></li>
+        </ul>
+
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item active" href="fault-reports.html"><i class="fas fa-exclamation-circle me-2"></i>Fault Reports</a></li>
+            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+    
+    <!-- Mobile Footer Styles -->
+    <style>
+        /* Mobile Footer */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: #039ed1;
+            background: rgba(3, 158, 209, 0.1);
+        }
+        
+        .mobile-footer-item:hover {
+            color: #039ed1;
+            text-decoration: none;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .mobile-dropdown .dropdown-item.active,
+        .mobile-dropdown .dropdown-item:active {
+            background-color: rgba(3, 158, 209, 0.1);
+            color: #039ed1;
+        }
+        
+        .mobile-dropdown .dropdown-divider {
+            margin: 5px 0;
+        }
+    </style>
+    
+    <script>
+    // Logout function
+    function logout() {
+        fetch('/waterbill/api/auth/logout.php', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '../auth/login.html';
+            } else {
+                console.error('Logout failed:', data.message);
+                alert('Failed to logout. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+            window.location.href = '../auth/login.html';
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load responsive admin header
+        fetch('/waterbill/frontend/includes/admin-header-responsive.html')
+            .then(response => response.text())
+            .then(html => {
+                const header = document.getElementById('admin-header');
+                if (header) {
+                    header.innerHTML = html;
+                    
+                    // Highlight current menu item
+                    const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage || 
+                            (currentPage.includes(href.replace('.html', '')) && href !== '#')) {
+                            link.classList.add('active');
+                            link.setAttribute('aria-current', 'page');
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading header:', error);
+            });
+    });
+    </script>
+</body>
+</html>

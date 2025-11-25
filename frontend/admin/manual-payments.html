@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Cash Payments - WaterBill NG Admin</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 0;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+            padding-top: 70px; /* For desktop header */
+        }
+        
+        /* Hide desktop header on mobile */
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            
+            body {
+                padding-top: 0;
+                padding-bottom: 70px; /* Space for mobile footer */
+            }
+            
+            .manual-payments-container {
+                padding: 10px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* Adjust form elements for mobile */
+            .form-control, .form-select, .form-check-input {
+                font-size: 16px; /* Prevents zoom on focus in mobile Safari */
+            }
+            
+            /* Adjust table for mobile */
+            .table-responsive {
+                font-size: 0.85rem;
+                border: 0;
+            }
+            
+            .table thead {
+                display: none;
+            }
+            
+            .table, .table tbody, .table tr, .table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .table tr {
+                margin-bottom: 15px;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            
+            .table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                width: 45%;
+                padding-right: 10px;
+                text-align: left;
+                font-weight: 600;
+            }
+            
+            .table td:last-child {
+                border-bottom: 0;
+            }
+            
+            /* Adjust buttons */
+            .btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            /* Adjust modals */
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+            
+            .modal-content {
+                border-radius: 8px;
+            }
+            
+            /* Adjust proof container */
+            .proof-container {
+                max-height: 50vh;
+            }
+            
+            .proof-actions {
+                flex-wrap: wrap;
+            }
+        }
+        
+        .manual-payments-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .proof-container {
+            max-width: 100%;
+            max-height: 60vh;
+            overflow: auto;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .proof-container img {
+            max-width: 100%;
+            max-height: 60vh;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .proof-container iframe {
+            width: 100%;
+            min-height: 60vh;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .proof-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .proof-actions a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        
+        .proof-actions a:hover {
+            background: #e0e0e0;
+        }
+        
+        .payment-type-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .payment-type-cash {
+            background-color: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+        
+        .payment-type-upload {
+            background-color: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+        
+        .payment-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .payment-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .payment-body {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .payment-info {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .payment-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+        
+        .payment-info strong {
+            color: #333;
+            min-width: 150px;
+            display: inline-block;
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-view-proof {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .no-payments {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .payment-proof {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            min-width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Header - Only visible on desktop -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                <i class="fas fa-tint me-2"></i>
+                <span class="d-none d-md-inline">WaterBill NG Admin</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="dropdown d-none d-lg-block">
+                    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span class="d-none d-md-inline">Admin</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-link text-white d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="manual-payments-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Record Cash Payments</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recordPaymentModal">
+                <i class="fas fa-plus-circle me-1"></i> Record Cash Payment
+            </button>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Payment Records</h5>
+                <p class="text-muted">View and manage all cash payments and receipt uploads</p>
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Payment Type</label>
+                        <select class="form-select" id="paymentTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="cash">Cash Payments</option>
+                            <option value="upload">Receipt Uploads</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status-filter">Status:</label>
+                        <select id="status-filter" onchange="loadPayments()">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="payment-method-filter">Method:</label>
+                        <select id="payment-method-filter" onchange="loadPayments()">
+                            <option value="">All Methods</option>
+                            <option value="cash">Cash</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-from">From:</label>
+                        <input type="date" id="date-from" onchange="loadPayments()">
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-to">To:</label>
+                        <input type="date" id="date-to" onchange="loadPayments()">
+                    </div>
+                    <div class="filter-group">
+                        <label for="searchInput">Search:</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search by user, reference, or receipt number">
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn btn-primary" onclick="loadPayments()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-outline-secondary" id="resetFilters">
+                            <i class="fas fa-sync-alt me-1"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Payment Type</th>
+                                <th>Date</th>
+                                <th>Reference/Receipt</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsList">
+                            <!-- Payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center p-3 border-top">
+                    <div class="text-muted">
+                        Showing <span id="showingFrom">0</span> to <span id="showingTo">0</span> of <span id="totalRecords">0</span> records
+                    </div>
+                    <nav>
+                        <ul class="pagination mb-0">
+                            <li class="page-item disabled" id="prevPage">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item" id="nextPage">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div id="payments-list">
+            <div class="no-payments">
+                <i class="fas fa-spinner fa-spin"></i> Loading payments...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="reports.html"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="manage-payments.html"><i class="fas fa-list me-2"></i>All Payments</a></li>
+            <li><a class="dropdown-item active" href="manual-payments.html"><i class="fas fa-money-bill-wave me-2"></i>Record Payments</a></li>
+            <li><a class="dropdown-item" href="manage-payments.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="manage-payments.html?status=approved"><i class="fas fa-check-circle me-2"></i>Approved</a></li>
+            <li><a class="dropdown-item" href="manage-payments.html?status=rejected"><i class="fas fa-times-circle me-2"></i>Rejected</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="fault-reports.html"><i class="fas fa-exclamation-circle me-2"></i>Fault Reports</a></li>
+            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+    
+    <!-- Mobile Footer Styles -->
+    <style>
+        /* Mobile Footer */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: #039ed1;
+            background: rgba(3, 158, 209, 0.1);
+        }
+        
+        .mobile-footer-item:hover {
+            color: #039ed1;
+            text-decoration: none;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .mobile-dropdown .dropdown-item.active,
+        .mobile-dropdown .dropdown-item:active {
+            background-color: rgba(3, 158, 209, 0.1);
+            color: #039ed1;
+        }
+        
+        .mobile-dropdown .dropdown-divider {
+            margin: 5px 0;
+        }
+    </style>
+    
+    <!-- Modal for viewing payment proof -->
+    <div id="proof-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Payment Proof</h3>
+            <div id="proof-content" class="proof-container">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="admin-notes">
+                <h4>Admin Notes</h4>
+                <textarea id="admin-notes" rows="4" placeholder="Add notes about this payment..."></textarea>
+                <button id="save-notes" class="btn btn-primary">Save Notes</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let currentPaymentId = null;
+        
+        $(document).ready(function() {
+            // Load standard admin header
+            fetch('includes/standard-admin-header.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('admin-header').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading header:', error));
+            
+            // Load payments
+            loadPayments();
+            
+            // Filter events
+            $('#apply-filters').click(loadPayments);
+            $('#reset-filters').click(function() {
+                $('#status-filter, #payment-method-filter').val('');
+                $('#date-from, #date-to').val('');
+                loadPayments();
+            });
+            
+            // Modal close
+            $('.close-modal, .modal').click(function(e) {
+                if (e.target === this || $(e.target).hasClass('close-modal')) {
+                    $('#proof-modal').hide();
+                }
+            });
+            
+            // Save notes
+            $('#save-notes').click(saveAdminNotes);
+        });
+        
+        function loadAdminNotes(paymentId) {
+            fetch(`../../api/admin/get-payment-notes.php?payment_id=${paymentId}`, {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.notes) {
+                    document.getElementById('admin-notes').value = data.notes;
+                } else {
+                    document.getElementById('admin-notes').value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading notes:', error);
+            });
+        }
+        
+        function loadPayments() {
+            const status = $('#status-filter').val();
+            const method = $('#payment-method-filter').val();
+            const dateFrom = $('#date-from').val();
+            const dateTo = $('#date-to').val();
+            
+            $('#payments-list').html('<div class="no-payments"><i class="fas fa-spinner fa-spin"></i> Loading payments...</div>');
+            
+            // Build query string
+            let query = [];
+            if (status) query.push(`status=${encodeURIComponent(status)}`);
+            if (method) query.push(`method=${encodeURIComponent(method)}`);
+            if (dateFrom) query.push(`date_from=${encodeURIComponent(dateFrom)}`);
+            if (dateTo) query.push(`date_to=${encodeURIComponent(dateTo)}`);
+            
+            fetch(`../../api/admin/manual-payments.php${query.length ? '?' + query.join('&') : ''}`, {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data && data.data.length > 0) {
+                    renderPayments(data.data);
+                } else {
+                    $('#payments-list').html('<div class="no-payments">No manual payments found</div>');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading payments:', error);
+                $('#payments-list').html('<div class="no-payments">Error loading payments. Please try again.</div>');
+            });
+        }
+        
+        function renderPayments(payments) {
+            let html = '';
+            
+            payments.forEach(payment => {
+                const statusClass = `status-${payment.status}`;
+                const formattedDate = new Date(payment.payment_date).toLocaleDateString();
+                const formattedAmount = parseFloat(payment.amount).toLocaleString('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN'
+                });
+                
+                // Format payment method for display
+                let paymentMethod = payment.payment_method;
+                if (paymentMethod === 'bank_transfer') paymentMethod = 'Bank Transfer';
+                else if (paymentMethod === 'cash') paymentMethod = 'Cash';
+                else paymentMethod = payment.payment_method.charAt(0).toUpperCase() + payment.payment_method.slice(1);
+                
+                html += `
+                <div class="payment-card" data-id="${payment.id}">
+                    <div class="payment-header">
+                        <div>
+                            <strong>${payment.user_name || 'User'}</strong> • 
+                            ${formattedDate} • 
+                            <span class="payment-status ${statusClass}">
+                                ${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                            </span>
+                        </div>
+                        <div>${formattedAmount}</div>
+                    </div>
+                    <div class="payment-body">
+                        <div class="payment-info">
+                            <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+                            ${payment.transaction_reference ? `<p><strong>Reference:</strong> ${payment.transaction_reference}</p>` : ''}
+                            ${payment.admin_notes ? `<p><strong>Notes:</strong> ${payment.admin_notes}</p>` : ''}
+                            ${payment.payment_proof ? 
+                                `<p><strong>Proof:</strong> 
+                                    <a href="#" class="view-proof" data-proof="${payment.payment_proof}" data-id="${payment.id}">
+                                        <i class="fas ${payment.payment_method === 'bank_transfer' ? 'fa-file-invoice' : 'fa-money-bill-wave'}"></i> 
+                                        ${payment.payment_method === 'bank_transfer' ? 'View Receipt' : 'View Details'}
+                                    </a>
+                                </p>` 
+                                : ''
+                            }
+                        </div>
+                        <div class="payment-actions">
+                            ${payment.status === 'pending' ? `
+                                <button class="btn btn-approve" onclick="updatePaymentStatus(${payment.id}, 'approved')">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button class="btn btn-reject" onclick="updatePaymentStatus(${payment.id}, 'rejected')">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            ` : ''}
+                            ${payment.payment_proof ? `
+                                <button class="btn btn-view-proof" onclick="viewProof('${payment.payment_proof}', ${payment.id})">
+                                    <i class="fas fa-receipt"></i> View Proof
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            });
+            
+            $('#payments-list').html(html);
+            
+            // Attach event listeners
+            $('.view-proof').click(function(e) {
+                e.preventDefault();
+                const proofUrl = $(this).data('proof');
+                const paymentId = $(this).data('id');
+                viewProof(proofUrl, paymentId);
+            });
+        }
+        
+        function viewProof(proofUrl, paymentId) {
+            currentPaymentId = paymentId;
+            const modal = document.getElementById('proof-modal');
+            const proofContent = document.getElementById('proof-content');
+            
+            // Clear previous content
+            proofContent.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading proof...</div>';
+            
+            // Show the modal
+            modal.style.display = 'block';
+            
+            // Get file extension
+            const fileExt = proofUrl.split('.').pop().toLowerCase();
+            const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(fileExt);
+            const isPdf = fileExt === 'pdf';
+            
+            // Load the proof based on file type
+            let content = '';
+            const fileUrl = `../../uploads/${proofUrl}`;
+            
+            if (isImage) {
+                content = `<img src="${fileUrl}" alt="Payment Receipt" class="img-fluid">`;
+            } else if (isPdf) {
+                content = `
+                    <iframe src="${fileUrl}" frameborder="0"></iframe>
+                    <div class="proof-actions">
+                        <a href="${fileUrl}" target="_blank" download>
+                            <i class="fas fa-download"></i> Download PDF
+                        </a>
+                        <a href="${fileUrl}" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Open in New Tab
+                        </a>
+                    </div>`;
+            } else {
+                content = `
+                    <div class="alert alert-info">
+                        <p>This file type cannot be previewed. Please download it to view.</p>
+                        <a href="${fileUrl}" class="btn btn-primary" download>
+                            <i class="fas fa-download"></i> Download File
+                        </a>
+                    </div>`;
+            }
+            
+            // Set the content
+            proofContent.innerHTML = content;
+            
+            // Load admin notes if any
+            loadAdminNotes(paymentId);
+            
+            // Close modal when clicking the X
+            document.querySelector('.close-modal').onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            // Close modal when clicking outside the content
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+            const proofExtension = proofUrl.split('.').pop().toLowerCase();
+            let proofHtml = '';
+            
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(proofExtension)) {
+                proofHtml = `<img src="${proofUrl}" alt="Payment Proof" style="max-width: 100%;">`;
+            } else if (['pdf'].includes(proofExtension)) {
+                proofHtml = `<iframe src="${proofUrl}" width="100%" height="600px" style="border: none;"></iframe>`;
+            } else {
+                proofHtml = `<a href="${proofUrl}" target="_blank" class="btn">Download File</a>`;
+            }
+            
+            $('#proof-content').html(proofHtml);
+            $('#admin-notes-section').show();
+            $('#proof-modal').show();
+            
+            // Load existing admin notes if any
+            if (currentPaymentId) {
+                fetch(`../../api/admin/manual-payments.php`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.data) {
+                            const payment = data.data.find(p => p.id == currentPaymentId);
+                            if (payment) {
+                                $('#admin-notes').val(payment.admin_notes || '');
+                            }
+                        }
+                    });
+            }
+        }
+        
+        function updatePaymentStatus(paymentId, status) {
+            if (!confirm(`Are you sure you want to ${status} this payment?`)) {
+                return;
+            }
+            
+            fetch(`../../api/admin/manual-payments.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    id: paymentId,
+                    status: status,
+                    admin_notes: $('#admin-notes').val()
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Payment ${status} successfully`);
+                    loadPayments();
+                    $('#proof-modal').hide();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to update payment'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+        
+        function saveAdminNotes() {
+            if (!currentPaymentId) return;
+            
+            const notes = $('#admin-notes').val();
+            
+            fetch(`../../api/admin/manual-payments.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    id: currentPaymentId,
+                    admin_notes: notes
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Notes saved successfully');
+                    loadPayments();
+                } else {
+                    alert('Error saving notes: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving notes.');
+            });
+        }
+    </script>
+
+    <!-- Load responsive admin header -->
+    <script>
+    // Logout function
+    function logout() {
+        fetch('/waterbill/api/auth/logout.php', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '../auth/login.html';
+            } else {
+                console.error('Logout failed:', data.message);
+                alert('Failed to logout. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+            window.location.href = '../auth/login.html';
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load responsive admin header
+        fetch('/waterbill/frontend/includes/admin-header-responsive.html')
+            .then(response => response.text())
+            .then(html => {
+                const header = document.getElementById('admin-header');
+                if (header) {
+                    header.innerHTML = html;
+                    
+                    // Highlight current menu item
+                    const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage || 
+                            (currentPage.includes(href.replace('.html', '')) && href !== '#')) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading header:', error));
+    });
+    </script>
+    </body>
+</html>

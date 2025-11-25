@@ -1,0 +1,1793 @@
+[31-Oct-2025 18:45:11 Europe/Berlin] [2025-10-31 18:45:11] Admin dashboard data error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.surname' in 'field list' in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 80
+Data: Array
+(
+    [trace] => #0 C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php(80): PDO->query('\n        SELECT...')
+#1 {main}
+    [session] => Array
+        (
+            [initiated] => 1
+            [user_id] => 1
+            [user_role] => admin
+            [name] => sir adminu admin
+            [role] => admin
+            [username] => admin
+        )
+
+    [pdo_error] => Array
+        (
+            [0] => 42S22
+            [1] => 1054
+            [2] => Unknown column 'u.surname' in 'field list'
+        )
+
+)
+
+
+[31-Oct-2025 18:48:58 Europe/Berlin] [2025-10-31 18:48:58] Admin dashboard data error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.surname' in 'field list' in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 86
+Data: Array
+(
+    [trace] => #0 C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php(86): PDO->query('\n        SELECT...')
+#1 {main}
+    [session] => Array
+        (
+            [initiated] => 1
+            [user_id] => 1
+            [user_role] => admin
+            [name] => sir adminu admin
+            [role] => admin
+            [username] => admin
+        )
+
+    [pdo_error] => Array
+        (
+            [0] => 42S22
+            [1] => 1054
+            [2] => Unknown column 'u.surname' in 'field list'
+        )
+
+)
+
+
+[31-Oct-2025 18:49:16 Europe/Berlin] [2025-10-31 18:49:16] Admin dashboard data error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.surname' in 'field list' in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 86
+Data: Array
+(
+    [trace] => #0 C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php(86): PDO->query('\n        SELECT...')
+#1 {main}
+    [session] => Array
+        (
+            [initiated] => 1
+            [user_id] => 1
+            [user_role] => admin
+            [name] => sir adminu admin
+            [role] => admin
+            [username] => admin
+        )
+
+    [pdo_error] => Array
+        (
+            [0] => 42S22
+            [1] => 1054
+            [2] => Unknown column 'u.surname' in 'field list'
+        )
+
+)
+
+
+[31-Oct-2025 19:24:56 Europe/Berlin] [2025-10-31 19:24:56] Admin dashboard data error: Unauthorized - Admin access required in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 31
+Data: Array
+(
+    [trace] => #0 {main}
+    [session] => Array
+        (
+            [user_id] => 2
+            [role] => user
+            [name] => Chalcedony  Ariel Sokomba
+            [initiated] => 1
+        )
+
+    [pdo_error] => No PDO connection
+)
+
+
+[02-Nov-2025 12:24:14 Europe/Berlin] Session data: Array
+(
+)
+
+[02-Nov-2025 12:24:14 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl
+        )
+
+    [session] => Array
+        (
+        )
+
+)
+
+[02-Nov-2025 12:24:14 Europe/Berlin] Temporary admin session created for debugging
+[02-Nov-2025 12:24:14 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\waterbill\api\admin/../../includes/db_connect.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 101
+[02-Nov-2025 12:24:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\waterbill\api\admin/../../includes/db_connect.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php:101
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 101
+[02-Nov-2025 12:24:15 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:24:15 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:24:15 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\waterbill\api\admin/../../includes/db_connect.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 101
+[02-Nov-2025 12:24:15 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\waterbill\api\admin/../../includes/db_connect.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php:101
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 101
+[02-Nov-2025 12:25:58 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:25:58 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:25:58 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\waterbill\api\admin/../../includes/db_connect.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 101
+[02-Nov-2025 12:25:58 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\waterbill\api\admin/../../includes/db_connect.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php:101
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\waterbill\api\admin\admin-dashboard-data.php on line 101
+[02-Nov-2025 12:28:16 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:28:16 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Android"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?1
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:28:16 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:29:32 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:29:32 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Android"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?1
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:29:32 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:34:32 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:34:32 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:34:33 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:34:39 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:34:39 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:34:39 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:34:43 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:34:43 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:34:43 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:37:48 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:37:48 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:37:48 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:42:48 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:42:48 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:42:48 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 12:42:57 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 12:42:57 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 12:42:57 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:23:46 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:23:46 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:23:46 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:28:47 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:28:47 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:28:47 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:33:47 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:33:47 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:33:47 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:36:09 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:36:09 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:36:09 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:41:10 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:41:10 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:41:10 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:46:16 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:46:16 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:46:16 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:47:05 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:47:05 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:47:05 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:47:32 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:47:32 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:47:32 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:47:45 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:47:45 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:47:45 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:48:19 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:48:19 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:48:19 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:48:19 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:48:19 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php?
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache, no-store, must-revalidate
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [sec-ch-ua-mobile] => ?0
+            [Expires] => 0
+            [X-Requested-With] => XMLHttpRequest
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:48:19 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:49:24 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:49:24 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:49:24 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:54:25 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:54:25 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:54:25 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 14:57:46 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 14:57:46 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 14:57:46 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 15:02:47 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 15:02:47 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 15:02:47 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 15:07:47 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 15:07:47 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 15:07:47 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 15:08:28 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 15:08:28 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 15:08:28 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[02-Nov-2025 15:13:29 Europe/Berlin] Session data: Array
+(
+    [user_id] => 1
+    [role] => admin
+    [username] => admin
+)
+
+[02-Nov-2025 15:13:29 Europe/Berlin] Request info: Array
+(
+    [method] => GET
+    [uri] => /waterbill/api/admin/admin-dashboard-data.php
+    [query] => Array
+        (
+        )
+
+    [headers] => Array
+        (
+            [Host] => localhost
+            [Connection] => keep-alive
+            [sec-ch-ua-platform] => "Windows"
+            [Cache-Control] => no-cache
+            [Accept-Language] => en-US,en;q=0.9
+            [Pragma] => no-cache
+            [sec-ch-ua] => "Not.A/Brand";v="99", "Chromium";v="136"
+            [User-Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+            [sec-ch-ua-mobile] => ?0
+            [Accept] => */*
+            [Sec-Fetch-Site] => same-origin
+            [Sec-Fetch-Mode] => cors
+            [Sec-Fetch-Dest] => empty
+            [Referer] => http://localhost/waterbill/frontend/admin/dashboard.html
+            [Accept-Encoding] => gzip, deflate, br, zstd
+            [Cookie] => PHPSESSID=9r7nr88esfjtfpj906it3ljvtl; waterbill_admin_session=rb0t2p7pfmf1ivr3m2i91ibut9
+        )
+
+    [session] => Array
+        (
+            [user_id] => 1
+            [role] => admin
+            [username] => admin
+        )
+
+)
+
+[02-Nov-2025 15:13:29 Europe/Berlin] Executing recent payments query: 
+            SELECT 
+                p.id,
+                CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) as user_name,
+                p.amount,
+                COALESCE(p.method, p.payment_method, 'N/A') as method,
+                p.created_at,
+                p.status
+            FROM payments p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.payment_type = 'water_bill'
+            ORDER BY p.created_at DESC
+            LIMIT 4
+        
+[09-Nov-2025 14:03:17 America/New_York] Session data: Array
+(
+)
+
+[10-Nov-2025 05:31:20 America/New_York] Session data: Array
+(
+)
+

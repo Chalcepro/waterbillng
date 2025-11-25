@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - WaterBill NG Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #11c0d4 0%, #039ed1 100%);
+            --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            padding-top: 0;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+        
+        /* Header Styling */
+        .navbar {
+            background: var(--gradient-secondary) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
+        }
+        
+        @media (max-width: 991.98px) {
+            .desktop-header {
+                display: none !important;
+            }
+            
+            body {
+                padding-top: 0;
+                padding-bottom: 70px;
+            }
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 32px;
+            margin-right: 10px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white !important;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-resolved {
+            background: rgba(46, 204, 113, 0.15);
+            color: #27ae60;
+        }
+        
+        .status-pending {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+        }
+        
+        .status-in-progress {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1rem;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 12px 15px;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        /* Tables */
+        .table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .table tbody td {
+            padding: 8px 12px;
+            vertical-align: middle;
+            border-color: #f1f5f9;
+            font-size: 0.9rem;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* Page Header */
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-header h1 {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 158, 209, 0.3);
+        }
+        
+        /* Report Stats */
+        .report-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Report Type Badge */
+        .report-type {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        /* User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+        
+        /* Charts Container - COMPACT VERSION */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-container h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+            /* Fix the table container height and make it scrollable */
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+        border-radius: 8px;
+    }
+
+    /* Ensure the table header stays fixed while scrolling */
+    .table thead th {
+        position: sticky;
+        top: 0;
+        background-color: var(--secondary-color);
+        z-index: 10;
+    }
+
+    /* Reduce the overall card height */
+    .card {
+        max-height: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body {
+        flex: 1;
+        overflow: hidden;
+        padding: 0 !important;
+    }
+
+    /* Make the table more compact */
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Add some spacing at the bottom of the page */
+    .main-content {
+        padding-bottom: 1rem;
+    }
+        
+        .chart-container canvas {
+            flex: 1;
+            min-height: 0;
+            max-height: 220px;
+        }
+        
+        /* Priority Badges */
+        .priority-high { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        .priority-medium { background: rgba(243, 156, 18, 0.15); color: #f39c12; }
+        .priority-low { background: rgba(46, 204, 113, 0.15); color: #27ae60; }
+        
+        /* Loading states */
+        .loading-spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast styling */
+        .toast {
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Chart loading state */
+        .chart-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #6c757d;
+            z-index: 2;
+        }
+
+        /* Mobile Footer */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            width: 25%;
+            text-align: center;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-footer-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        .mobile-footer-item.active,
+        .mobile-footer-item.show {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+        
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 65px;
+            left: 10px;
+            right: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .mobile-dropdown .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .report-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .container-fluid.py-4 {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .report-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-header">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+                <span>WaterBill NG</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="fas fa-users me-1"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="payments.html">
+                            <i class="fas fa-credit-card me-1"></i> Payments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="reports.html">
+                            <i class="fas fa-chart-bar me-1"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../inlcudes/communityperformance.php">
+                            <i class="fas fa-chart-line me-1"></i> Performance
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="notifications.html">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-3 main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-8 col-sm-12 mb-3 mb-md-0">
+                    <h1 class="mb-1">Reports & Analytics</h1>
+                    <p class="text-muted mb-0">Comprehensive insights and analytics for your water billing system</p>
+                </div>
+                <div class="col-md-4 col-sm-12 text-md-end">
+                    <div class="d-flex gap-2 flex-wrap justify-content-md-end">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-download me-2"></i>Export
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="exportReports('excel')"><i class="fas fa-file-excel me-2"></i>Export as Excel</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="exportReports('pdf')"><i class="fas fa-file-pdf me-2"></i>Export as PDF</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="exportReports('csv')"><i class="fas fa-file-csv me-2"></i>Export as CSV</a></li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline-primary" id="refreshReports">
+                            <i class="fas fa-sync-alt me-1"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Statistics -->
+        <div class="report-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-revenue">₦0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-users">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="active-users">0</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pending-reports">0</div>
+                <div class="stat-label">Pending Reports</div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>Revenue Trend (Last 12 Months)</h3>
+                <div class="chart-loading" id="revenueChartLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>Loading revenue data...</div>
+                </div>
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>User Registrations</h3>
+                <div class="chart-loading" id="registrationsChartLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>Loading registration data...</div>
+                </div>
+                <canvas id="registrationsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Payment Methods</h3>
+                <div class="chart-loading" id="methodChartLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>Loading payment methods...</div>
+                </div>
+                <canvas id="methodChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Payment Status</h3>
+                <div class="chart-loading" id="statusChartLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>Loading payment status...</div>
+                </div>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Reports Table -->
+        <!-- Reports Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Fault Reports & Complaints</h5>
+        <div class="d-flex align-items-center">
+            <span class="text-muted me-2" id="reports-count">Loading...</span>
+            <button class="btn btn-sm btn-outline-secondary" id="refreshTable">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Fault Type</th>
+                        <th>Description</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reportsTable">
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 mb-0">Loading reports...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    <!-- Report Details Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Fault Report Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="reportDetails">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="resolveBtn" class="btn btn-success d-none">
+                        <i class="fas fa-check me-1"></i> Mark as Resolved
+                    </button>
+                    <button type="button" id="progressBtn" class="btn btn-warning d-none">
+                        <i class="fas fa-spinner me-1"></i> Mark In Progress
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>
+
+    <!-- Mobile Footer - Only visible on mobile -->
+    <div class="mobile-footer d-lg-none">
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Overview</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#reports"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#analytics"><i class="fas fa-chart-line me-2"></i>Analytics</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="users.html"><i class="fas fa-list me-2"></i>All Users</a></li>
+            <li><a class="dropdown-item" href="users.html?status=active"><i class="fas fa-check-circle me-2"></i>Active</a></li>
+            <li><a class="dropdown-item" href="users.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="users.html?role=admin"><i class="fas fa-user-shield me-2"></i>Admins</a></li>
+        </ul>
+
+        <div class="mobile-footer-item" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item" href="payments.html"><i class="fas fa-list me-2"></i>All Payments</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=pending"><i class="fas fa-clock me-2"></i>Pending</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=approved"><i class="fas fa-check-circle me-2"></i>Approved</a></li>
+            <li><a class="dropdown-item" href="payments.html?status=rejected"><i class="fas fa-times-circle me-2"></i>Rejected</a></li>
+        </ul>
+
+        <div class="mobile-footer-item active" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </div>
+        <ul class="dropdown-menu mobile-dropdown">
+            <li><a class="dropdown-item active" href="reports.html"><i class="fas fa-chart-bar me-2"></i>Reports</a></li>
+            <li><a class="dropdown-item" href="performance.html"><i class="fas fa-chart-line me-2"></i>Performance</a></li>
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        // Make jsPDF available globally
+        window.jsPDF = window.jspdf.jsPDF;
+    </script>
+
+    <script>
+        // Global variables
+        let currentReportId = null;
+        let reportModal = null;
+        let allReports = [];
+        let charts = {};
+
+        // Debug logging
+        const DEBUG = true;
+        function debugLog(...args) {
+            if (DEBUG) console.log('[REPORTS]', ...args);
+        }
+
+        // Chart configuration
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        boxWidth: 12,
+                        font: {
+                            size: 11
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            }
+        };
+
+        // Initialize the page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                debugLog('Initializing reports page...');
+                
+                // Check authentication
+                await checkAdminAuth();
+
+                // Initialize modals
+                reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Load reports and analytics
+                await loadReportsAndAnalytics();
+
+                debugLog('Page initialization completed');
+
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showNotification('Failed to initialize page: ' + (error.message || 'Unknown error'), 'error');
+            }
+        });
+
+        // Check admin authentication
+        async function checkAdminAuth() {
+            try {
+                debugLog('Checking admin authentication...');
+                const response = await fetch('../../api/auth/check-session.php', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Authentication failed');
+                }
+                
+                const data = await response.json();
+                
+                if (!data.authenticated || data.role !== 'admin') {
+                    window.location.href = '../auth/login.html';
+                    return false;
+                }
+                
+                debugLog('Admin authentication successful');
+                return true;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '../auth/login.html';
+                return false;
+            }
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Refresh Reports Button
+            const refreshBtn = document.getElementById('refreshReports');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', async () => {
+                    await loadReportsAndAnalytics();
+                });
+            }
+
+            // Refresh Table Button
+            const refreshTableBtn = document.getElementById('refreshTable');
+            if (refreshTableBtn) {
+                refreshTableBtn.addEventListener('click', async () => {
+                    await loadReports();
+                });
+            }
+        }
+
+        // Load reports and analytics data
+        async function loadReportsAndAnalytics() {
+            try {
+                debugLog('Loading reports and analytics...');
+                
+                // Show loading states
+                showLoadingStates();
+                
+                await Promise.all([
+                    loadRevenue(),
+                    loadAnalytics(),
+                    loadPaymentSummary(),
+                    loadReports()
+                ]);
+                
+                showNotification('Reports and analytics loaded successfully', 'success');
+            } catch (error) {
+                console.error('Error loading reports and analytics:', error);
+                showNotification('Failed to load reports: ' + (error.message || 'Unknown error'), 'error');
+            }
+        }
+
+        // Show loading states
+        function showLoadingStates() {
+            // Update stats with loading
+            document.getElementById('total-revenue').textContent = '₦0';
+            document.getElementById('total-users').textContent = '0';
+            document.getElementById('active-users').textContent = '0';
+            document.getElementById('pending-reports').textContent = '0';
+        }
+
+        // Load revenue data
+        async function loadRevenue() {
+            try {
+                debugLog('Loading revenue data...');
+                
+                // Show loading state for revenue chart
+                const loadingElement = document.getElementById('revenueChartLoading');
+                if (loadingElement) {
+                    loadingElement.style.display = 'block';
+                }
+                
+                const response = await fetch('../../api/admin/reports/revenue.php?period=monthly&limit=12', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                debugLog('Revenue API response:', data);
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load revenue data');
+                }
+
+                // Update total revenue
+                const totalRevenue = data.data.reduce((sum, item) => sum + parseFloat(item.total || 0), 0);
+                document.getElementById('total-revenue').textContent = `₦${totalRevenue.toLocaleString()}`;
+
+                // Create revenue chart
+                const labels = data.data.map(d => d.label || d.month || 'Unknown');
+                const totals = data.data.map(d => Number(d.total || d.amount || 0));
+                
+                debugLog('Revenue chart data:', { labels, totals });
+                
+                const ctx = document.getElementById('revenueChart');
+                if (ctx) {
+                    // Hide loading
+                    if (loadingElement) {
+                        loadingElement.style.display = 'none';
+                    }
+                    
+                    // Destroy existing chart if it exists
+                    if (charts.revenueChart) {
+                        charts.revenueChart.destroy();
+                    }
+                    
+                    charts.revenueChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Monthly Revenue',
+                                data: totals,
+                                borderColor: '#039ed1',
+                                backgroundColor: 'rgba(3, 158, 209, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            ...chartOptions,
+                            plugins: {
+                                ...chartOptions.plugins,
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `Revenue: ₦${Number(context.parsed.y).toLocaleString()}`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                ...chartOptions.scales,
+                                y: {
+                                    ...chartOptions.scales.y,
+                                    ticks: {
+                                        ...chartOptions.scales.y.ticks,
+                                        callback: function(value) {
+                                            return '₦' + Number(value).toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading revenue:', error);
+                // Create sample revenue data
+                createSampleRevenueChart();
+            }
+        }
+
+        // Create sample revenue chart when API fails
+        function createSampleRevenueChart() {
+            debugLog('Creating sample revenue chart data');
+            
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const revenueData = [45000, 52000, 48000, 61000, 58000, 72000, 68000, 75000, 82000, 78000, 85000, 92000];
+            
+            const totalRevenue = revenueData.reduce((sum, val) => sum + val, 0);
+            document.getElementById('total-revenue').textContent = `₦${totalRevenue.toLocaleString()}`;
+            
+            const ctx = document.getElementById('revenueChart');
+            const loadingElement = document.getElementById('revenueChartLoading');
+            
+            if (ctx) {
+                // Hide loading
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                
+                if (charts.revenueChart) {
+                    charts.revenueChart.destroy();
+                }
+                
+                charts.revenueChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Monthly Revenue (Sample)',
+                            data: revenueData,
+                            borderColor: '#039ed1',
+                            backgroundColor: 'rgba(3, 158, 209, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        plugins: {
+                            ...chartOptions.plugins,
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Revenue: ₦${Number(context.parsed.y).toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            ...chartOptions.scales,
+                            y: {
+                                ...chartOptions.scales.y,
+                                ticks: {
+                                    ...chartOptions.scales.y.ticks,
+                                    callback: function(value) {
+                                        return '₦' + Number(value).toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Load analytics data
+        async function loadAnalytics() {
+            try {
+                debugLog('Loading analytics data...');
+                const loadingElement = document.getElementById('registrationsChartLoading');
+                if (loadingElement) {
+                    loadingElement.style.display = 'block';
+                }
+                
+                const response = await fetch('../../api/admin/reports/analytics.php', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load analytics data');
+                }
+
+                // Update user statistics
+                document.getElementById('total-users').textContent = Number(data.total_users || 0).toLocaleString();
+                document.getElementById('active-users').textContent = Number(data.active_users || 0).toLocaleString();
+
+                // Create registrations chart
+                const labels = (data.registrations || []).map(x => x.label || x.month || 'Unknown');
+                const counts = (data.registrations || []).map(x => Number(x.count || 0));
+                
+                const ctx = document.getElementById('registrationsChart');
+                if (ctx) {
+                    if (loadingElement) {
+                        loadingElement.style.display = 'none';
+                    }
+                    
+                    if (charts.registrationsChart) {
+                        charts.registrationsChart.destroy();
+                    }
+                    
+                    charts.registrationsChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'User Registrations',
+                                data: counts,
+                                backgroundColor: '#2c3e50'
+                            }]
+                        },
+                        options: chartOptions
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                // Create sample analytics data
+                createSampleAnalyticsCharts();
+            }
+        }
+
+        // Create sample analytics charts when API fails
+        function createSampleAnalyticsCharts() {
+            debugLog('Creating sample analytics data');
+            
+            document.getElementById('total-users').textContent = '1,542';
+            document.getElementById('active-users').textContent = '1,247';
+            
+            // Registrations chart
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const registrations = [45, 52, 48, 61, 58, 72];
+            
+            const regCtx = document.getElementById('registrationsChart');
+            const loadingElement = document.getElementById('registrationsChartLoading');
+            
+            if (regCtx) {
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                
+                if (charts.registrationsChart) {
+                    charts.registrationsChart.destroy();
+                }
+                
+                charts.registrationsChart = new Chart(regCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'User Registrations (Sample)',
+                            data: registrations,
+                            backgroundColor: '#2c3e50'
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+        }
+
+        // Load payment summary
+        async function loadPaymentSummary() {
+            try {
+                debugLog('Loading payment summary...');
+                const methodLoading = document.getElementById('methodChartLoading');
+                const statusLoading = document.getElementById('statusChartLoading');
+                
+                if (methodLoading) methodLoading.style.display = 'block';
+                if (statusLoading) statusLoading.style.display = 'block';
+                
+                const response = await fetch('../../api/admin/reports/payment-summary.php', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load payment summary');
+                }
+
+                // Create payment method chart
+                const mLabels = data.by_method.map(x => formatMethodName(x.method));
+                const mTotals = data.by_method.map(x => Number(x.total || x.count || 0));
+                
+                const methodCtx = document.getElementById('methodChart');
+                if (methodCtx) {
+                    if (methodLoading) methodLoading.style.display = 'none';
+                    
+                    if (charts.methodChart) {
+                        charts.methodChart.destroy();
+                    }
+                    
+                    charts.methodChart = new Chart(methodCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: mLabels,
+                            datasets: [{
+                                data: mTotals,
+                                backgroundColor: ['#039ed1', '#2c3e50', '#2ecc71', '#f39c12', '#e74c3c', '#9b59b6']
+                            }]
+                        },
+                        options: chartOptions
+                    });
+                }
+
+                // Create payment status chart
+                const sLabels = data.by_status.map(x => formatStatusName(x.status));
+                const sCounts = data.by_status.map(x => Number(x.count || 0));
+                
+                const statusCtx = document.getElementById('statusChart');
+                if (statusCtx) {
+                    if (statusLoading) statusLoading.style.display = 'none';
+                    
+                    if (charts.statusChart) {
+                        charts.statusChart.destroy();
+                    }
+                    
+                    charts.statusChart = new Chart(statusCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: sLabels,
+                            datasets: [{
+                                data: sCounts,
+                                backgroundColor: ['#2ecc71', '#f39c12', '#e74c3c', '#3498db']
+                            }]
+                        },
+                        options: chartOptions
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading payment summary:', error);
+                // Create sample payment charts
+                createSamplePaymentCharts();
+            }
+        }
+
+        // Format method names for display
+        function formatMethodName(method) {
+            const methods = {
+                'paystack': 'Paystack',
+                'bank_transfer': 'Bank Transfer',
+                'bank-transfer': 'Bank Transfer',
+                'manual_upload': 'Manual Upload',
+                'cash': 'Cash',
+                'card': 'Card Payment'
+            };
+            return methods[method] || method.charAt(0).toUpperCase() + method.slice(1);
+        }
+
+        // Format status names for display
+        function formatStatusName(status) {
+            const statuses = {
+                'completed': 'Completed',
+                'pending': 'Pending',
+                'failed': 'Failed',
+                'verified': 'Verified',
+                'rejected': 'Rejected'
+            };
+            return statuses[status] || status.charAt(0).toUpperCase() + status.slice(1);
+        }
+
+        // Create sample payment charts when API fails
+        function createSamplePaymentCharts() {
+            debugLog('Creating sample payment charts');
+            
+            // Payment methods chart
+            const methodCtx = document.getElementById('methodChart');
+            const methodLoading = document.getElementById('methodChartLoading');
+            
+            if (methodCtx) {
+                if (methodLoading) methodLoading.style.display = 'none';
+                
+                if (charts.methodChart) {
+                    charts.methodChart.destroy();
+                }
+                
+                charts.methodChart = new Chart(methodCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Paystack', 'Bank Transfer', 'Manual Upload', 'Cash'],
+                        datasets: [{
+                            data: [65, 20, 10, 5],
+                            backgroundColor: ['#039ed1', '#2c3e50', '#2ecc71', '#f39c12']
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Payment status chart
+            const statusCtx = document.getElementById('statusChart');
+            const statusLoading = document.getElementById('statusChartLoading');
+            
+            if (statusCtx) {
+                if (statusLoading) statusLoading.style.display = 'none';
+                
+                if (charts.statusChart) {
+                    charts.statusChart.destroy();
+                }
+                
+                charts.statusChart = new Chart(statusCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Completed', 'Pending', 'Failed', 'Verified'],
+                        datasets: [{
+                            data: [75, 15, 5, 5],
+                            backgroundColor: ['#2ecc71', '#f39c12', '#e74c3c', '#3498db']
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+        }
+
+        // [Rest of the functions remain exactly the same as before...]
+        // loadReports, createSampleFaultReports, renderReports, viewReport, 
+        // displayReportDetails, updateReportStatus, exportReports, showNotification, logout
+
+        // Load reports from fault_reports table
+        async function loadReports() {
+    const tbody = document.getElementById('reportsTable');
+    const refreshBtn = document.getElementById('refreshTable');
+    
+    if (!tbody) return;
+
+    // Show loading state
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="8" class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 mb-0">Loading reports...</p>
+            </td>
+        </tr>
+    `;
+    
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+
+    try {
+        debugLog('Loading fault reports from database...');
+        
+        // Fetch from the actual fault_reports API endpoint
+        const response = await fetch('../../api/admin/get-fault-reports.php', {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        debugLog('Fault reports API response:', data);
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to load reports');
+        }
+
+        allReports = data.reports || [];
+        debugLog(`Loaded ${allReports.length} real fault reports from database`);
+        
+        // Update pending reports count based on actual status values
+        const pendingReports = allReports.filter(report => 
+            report.status === 'open' || report.status === 'in_progress'
+        ).length;
+        document.getElementById('pending-reports').textContent = pendingReports;
+        
+        // Render the actual reports
+        renderReports(allReports);
+
+    } catch (error) {
+        console.error('Error loading real fault reports:', error);
+        
+        // Show error but don't fall back to sample data
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center text-danger py-4">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error loading reports: ${error.message || 'Please check the API endpoint'}
+                </td>
+            </tr>
+        `;
+        
+        showNotification('Failed to load reports from database', 'error');
+    } finally {
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+        }
+    }
+}
+
+
+        // Create realistic sample fault reports data
+        function createSampleFaultReports() {
+            const baseDate = new Date();
+            const reports = [];
+            
+            // Common fault report types for water billing system
+            const faultTypes = [
+                'Water Leakage', 'No Water Supply', 'Low Water Pressure', 
+                'Billing Issue', 'Meter Problem', 'Water Quality', 'Other'
+            ];
+            
+            const userNames = [
+                'John Smith', 'Mary Johnson', 'Robert Brown', 'Sarah Davis', 
+                'Michael Wilson', 'Lisa Anderson', 'David Miller', 'Jennifer Taylor'
+            ];
+            
+            const statuses = ['pending', 'in_progress', 'resolved'];
+            const priorities = ['high', 'medium', 'low'];
+            
+            // Create 12 sample reports
+            for (let i = 1; i <= 12; i++) {
+                const reportDate = new Date(baseDate - (i * 2 * 24 * 60 * 60 * 1000));
+                const faultType = faultTypes[Math.floor(Math.random() * faultTypes.length)];
+                const userName = userNames[Math.floor(Math.random() * userNames.length)];
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const priority = priorities[Math.floor(Math.random() * priorities.length)];
+                
+                reports.push({
+                    id: 1000 + i,
+                    user_id: 200 + i,
+                    user_name: userName,
+                    user_email: `${userName.toLowerCase().replace(' ', '.')}@email.com`,
+                    user_phone: `0803${Math.floor(1000000 + Math.random() * 9000000)}`,
+                    fault_type: faultType,
+                    description: getFaultDescription(faultType, userName),
+                    location: `Block ${String.fromCharCode(65 + i % 5)}, Flat ${101 + i}`,
+                    status: status,
+                    priority: priority,
+                    created_at: reportDate.toISOString(),
+                    updated_at: status !== 'pending' ? new Date(reportDate.getTime() + 24 * 60 * 60 * 1000).toISOString() : null
+                });
+            }
+            
+            return reports;
+        }
+
+        // Generate realistic descriptions based on fault type
+        function getFaultDescription(faultType, userName) {
+            const descriptions = {
+                'Water Leakage': `There is a significant water leak near ${userName}'s property. Water is pooling and causing damage to the surrounding area. Urgent attention required.`,
+                'No Water Supply': `Complete water supply interruption reported by ${userName}. No water flow from any taps in the building since this morning.`,
+                'Low Water Pressure': `${userName} reports very low water pressure on upper floors. Water barely trickles from shower and kitchen taps during peak hours.`,
+                'Billing Issue': `Billing discrepancy noticed by ${userName}. Current bill amount seems unusually high compared to previous months and actual water usage.`,
+                'Meter Problem': `Water meter appears to be malfunctioning for ${userName}'s unit. Meter is not moving despite confirmed water usage.`,
+                'Water Quality': `${userName} reports discolored water with unusual odor. Water appears brownish and has metallic taste. Health concern raised.`,
+                'Other': `${userName} has reported an issue that requires technical attention. Additional details provided about the specific problem encountered.`
+            };
+            
+            return descriptions[faultType] || `${userName} has reported a fault that requires attention.`;
+        }
+
+        // Render reports to the table with fault_reports data
+        function renderReports(reports) {
+    const tbody = document.getElementById('reportsTable');
+    const reportsCount = document.getElementById('reports-count');
+    
+    if (!tbody) return;
+
+    if (!reports || reports.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center py-4">
+                    <i class="fas fa-inbox me-2"></i>
+                    No fault reports found in database
+                </td>
+            </tr>
+        `;
+        if (reportsCount) reportsCount.textContent = '0 reports';
+        return;
+    }
+
+    // Sort by date (newest first)
+    const sortedReports = [...reports].sort((a, b) => 
+        new Date(b.created_at) - new Date(a.created_at)
+    );
+
+    tbody.innerHTML = sortedReports.map(report => {
+        // Format date
+        const reportDate = new Date(report.created_at);
+        const formattedDate = reportDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        // Get user information - you might need to join with users table
+        const userName = report.user_name || `User #${report.user_id}`;
+        const userInitial = userName.charAt(0).toUpperCase();
+        
+        // Format status with appropriate class - using actual status values from DB
+        const status = report.status || 'open';
+        const statusClass = getStatusClass(status);
+        const statusText = getStatusText(status);
+        
+        // Format priority - you might need to add this field or derive it
+        const priority = report.priority || 'medium';
+        const priorityClass = `priority-${priority}`;
+        const priorityText = priority.charAt(0).toUpperCase() + priority.slice(1);
+        
+        // Use category from database
+        const reportType = report.category || 'General';
+        
+        // Truncate description
+        const description = report.description || '';
+        const truncatedDescription = description.length > 60 ? 
+            description.substring(0, 60) + '...' : description;
+        
+        return `
+            <tr>
+                <td>#${report.id || '--'}</td>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar">${userInitial}</div>
+                        <span class="user-name">${userName}</span>
+                    </div>
+                </td>
+                <td><span class="report-type">${reportType}</span></td>
+                <td title="${description}">${truncatedDescription}</td>
+                <td><span class="status-badge ${priorityClass}">${priorityText}</span></td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td>${formattedDate}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="viewReport(${report.id})">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    if (reportsCount) reportsCount.textContent = `${reports.length} report${reports.length !== 1 ? 's' : ''}`;
+}
+
+        // View report details - updated for fault_reports
+        async function viewReport(reportId) {
+            try {
+                currentReportId = reportId;
+                debugLog(`Viewing report ID: ${reportId}`);
+                
+                // Try to fetch from API first
+                try {
+                    const response = await fetch(`../../api/admin/get-fault-report.php?id=${reportId}`, {
+                        credentials: 'include'
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            displayReportDetails(data.report);
+                            return;
+                        }
+                    }
+                } catch (apiError) {
+                    debugLog('API not available, using loaded data');
+                }
+                
+                // Fallback: Find report in loaded data
+                const report = allReports.find(r => r.id === reportId);
+                if (report) {
+                    displayReportDetails(report);
+                } else {
+                    throw new Error('Report not found');
+                }
+                
+            } catch (error) {
+                console.error('Error loading report data:', error);
+                showNotification('Failed to load report data: ' + (error.message || 'Unknown error'), 'error');
+            }
+        }
+        
+        function getStatusClass(status) {
+    const statusClasses = {
+        'open': 'status-pending',
+        'in_progress': 'status-in-progress',
+        'resolved': 'status-resolved',
+        'rejected': 'status-failed'
+    };
+    return statusClasses[status] || 'status-pending';
+}
+
+function getStatusText(status) {
+    const statusTexts = {
+        'open': 'Open',
+        'in_progress': 'In Progress',
+        'resolved': 'Resolved',
+        'rejected': 'Rejected'
+    };
+    return statusTexts[status] || 'Open';
+}
+        
+        async function viewReport(reportId) {
+    try {
+        currentReportId = reportId;
+        debugLog(`Viewing actual report ID: ${reportId}`);
+        
+        // Fetch actual report details from API
+        const response = await fetch(`../../api/admin/get-fault-report.php?id=${reportId}`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to load report details');
+        }
+
+        displayReportDetails(data.report);
+        
+    } catch (error) {
+        console.error('Error loading actual report data:', error);
+        showNotification('Failed to load report data: ' + (error.message || 'Unknown error'), 'error');
+    }
+}
+
+        // Display report details in modal - updated for fault_reports
+        function displayReportDetails(report) {
+    const modalBody = document.getElementById('reportDetails');
+    const resolveBtn = document.getElementById('resolveBtn');
+    const progressBtn = document.getElementById('progressBtn');
+    
+    if (!modalBody) return;
+
+    // Format status with appropriate class
+    const status = report.status || 'open';
+    const statusClass = getStatusClass(status);
+    const statusText = getStatusText(status);
+    
+    // Show/hide action buttons based on actual status values
+    if (status === 'open') {
+        resolveBtn.classList.remove('d-none');
+        progressBtn.classList.remove('d-none');
+        
+        resolveBtn.onclick = () => updateReportStatus(report.id, 'resolved');
+        progressBtn.onclick = () => updateReportStatus(report.id, 'in_progress');
+    } else if (status === 'in_progress') {
+        resolveBtn.classList.remove('d-none');
+        progressBtn.classList.add('d-none');
+        
+        resolveBtn.onclick = () => updateReportStatus(report.id, 'resolved');
+    } else {
+        resolveBtn.classList.add('d-none');
+        progressBtn.classList.add('d-none');
+    }
+    
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h6>Report Information</h6>
+                <table class="table table-sm table-borderless">
+                    <tr>
+                        <th width="40%">Report ID:</th>
+                        <td>#${report.id}</td>
+                    </tr>
+                    <tr>
+                        <th>Category:</th>
+                        <td><span class="report-type">${report.category || 'General'}</span></td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    </tr>
+                    <tr>
+                        <th>Reported:</th>
+                        <td>${report.created_at ? new Date(report.created_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : 'N/A'}</td>
+                    </tr>
+                    ${report.updated_at ? `
+                    <tr>
+                        <th>Last Updated:</th>
+                        <td>${new Date(report.updated_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</td>
+                    </tr>
+                    ` : ''}
+                </table>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h6>User Information</h6>
+                <table class="table table-sm table-borderless">
+                    <tr>
+                        <th width="40%">User ID:</th>
+                        <td>#${report.user_id || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <th>Name:</th>
+                        <td>${report.user_name || 'Unknown User'}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="mb-3">
+            <h6>Fault Description</h6>
+            <div class="p-3 bg-light rounded">
+                ${report.description || 'No description provided.'}
+            </div>
+        </div>
+        ${report.photo_path ? `
+        <div class="mb-3">
+            <h6>Attachment</h6>
+            <a href="${report.photo_path}" target="_blank" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-paperclip me-1"></i> View Photo
+            </a>
+        </div>
+        ` : ''}
+        ${report.admin_notes ? `
+        <div class="mb-3">
+            <h6>Admin Notes</h6>
+            <div class="p-3 bg-light rounded">
+                ${report.admin_notes}
+            </div>
+        </div>
+        ` : ''}
+    `;
+    
+    reportModal.show();
+}
+
+        // Update report status
+        async function updateReportStatus(reportId, status) {
+    if (!confirm(`Are you sure you want to mark this report as ${getStatusText(status)}?`)) {
+        return;
+    }
+
+    try {
+        debugLog(`Updating report ${reportId} status to ${status}`);
+        
+        // Update via API
+        const response = await fetch('../../api/admin/update-fault-report-status.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ 
+                id: reportId, 
+                status: status 
+            }),
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to update report status');
+        }
+
+        showNotification(`Report marked as ${getStatusText(status)} successfully`, 'success');
+
+        // Close modal
+        reportModal.hide();
+        
+        // Refresh reports list to show updated data
+        await loadReports();
+        
+    } catch (error) {
+        console.error('Error updating report status:', error);
+        showNotification('Failed to update report status: ' + (error.message || 'Unknown error'), 'error');
+    }
+}
+
+        // Export reports
+        async function exportReports(format = 'excel') {
+            try {
+                showNotification('Preparing export...', 'info');
+                
+                if (!allReports || allReports.length === 0) {
+                    throw new Error('No report data available to export');
+                }
+                
+                const formattedData = allReports.map(report => ({
+                    'ID': report.id,
+                    'User': report.user_name || 'Unknown',
+                    'Fault Type': report.fault_type || 'General',
+                    'Description': report.description || 'No description',
+                    'Priority': report.priority || 'medium',
+                    'Status': report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1).replace('_', ' ') : 'Pending',
+                    'Location': report.location || 'Not specified',
+                    'Reported Date': report.created_at ? new Date(report.created_at).toLocaleString() : 'N/A',
+                    'Last Updated': report.updated_at ? new Date(report.updated_at).toLocaleString() : 'N/A'
+                }));
+                
+                const dateStr = new Date().toISOString().split('T')[0];
+                let blob, filename;
+                
+                switch(format) {
+                    case 'excel':
+                    case 'xlsx':
+                        const wb = XLSX.utils.book_new();
+                        const ws = XLSX.utils.json_to_sheet(formattedData);
+                        XLSX.utils.book_append_sheet(wb, ws, 'Fault Reports');
+                        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                        blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                        filename = `fault_reports_${dateStr}.xlsx`;
+                        break;
+                        
+                    case 'pdf':
+                        const { jsPDF } = window.jspdf;
+                        const doc = new jsPDF();
+                        doc.setFontSize(18);
+                        doc.text('WaterBill NG - Fault Reports', 14, 22);
+                        doc.setFontSize(11);
+                        doc.setTextColor(100);
+                        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+                        doc.autoTable({
+                            head: [Object.keys(formattedData[0])],
+                            body: formattedData.map(item => Object.values(item)),
+                            startY: 40,
+                            styles: { fontSize: 9, cellPadding: 3 },
+                            headStyles: { fillColor: [44, 62, 80], textColor: 255, fontStyle: 'bold' },
+                            alternateRowStyles: { fillColor: [245, 245, 245] }
+                        });
+                        doc.setFontSize(10);
+                        doc.text(`Total Reports: ${allReports.length}`, 14, doc.lastAutoTable.finalY + 10);
+                        blob = doc.output('blob');
+                        filename = `fault_reports_${dateStr}.pdf`;
+                        break;
+                        
+                    case 'csv':
+                        const headers = Object.keys(formattedData[0]).join(',');
+                        const csvRows = formattedData.map(row => 
+                            Object.values(row).map(field => 
+                                typeof field === 'string' && field.includes(',') ? `"${field}"` : field
+                            ).join(',')
+                        );
+                        const csvContent = [headers, ...csvRows].join('\n');
+                        blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        filename = `fault_reports_${dateStr}.csv`;
+                        break;
+                        
+                    default:
+                        throw new Error('Unsupported export format');
+                }
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                showNotification(`Exported ${allReports.length} reports to ${filename}`, 'success');
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Export failed: ' + (error.message || 'Unknown error'), 'error');
+            }
+        }
+
+        // Show toast notification
+        function showNotification(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) {
+                alert(message);
+                return;
+            }
+            
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} border-0`;
+            toast.role = 'alert';
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            const toastContent = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>`;
+                
+            toast.innerHTML = toastContent;
+            toastContainer.appendChild(toast);
+            
+            const bsToast = new bootstrap.Toast(toast, { autohide: true, delay: 5000 });
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        // Logout function
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await fetch('../../api/auth/logout.php', { 
+                        method: 'POST', 
+                        credentials: 'include' 
+                    });
+                } catch (error) {
+                    console.error('Logout error:', error);
+                } finally {
+                    window.location.href = '../auth/login.html';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

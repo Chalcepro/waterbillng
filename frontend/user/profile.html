@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - WaterBill NG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #039ed1;
+            --primary-dark: #0a5962;
+            --primary-light: rgba(3, 158, 209, 0.1);
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #11c0d4 0%, #039ed1 100%);
+            --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Styling - Hidden on tablet/mobile */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--gradient-secondary);
+            color: #fff;
+            padding: 15px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container img {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+        }
+
+        .logo-container h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--gradient-secondary);
+            color: white;
+            padding-top: 80px;
+            transition: 0.3s;
+            z-index: 999;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 30px;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for sidebar */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Profile Content */
+        .profile-content {
+            padding: 30px 20px 120px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(3, 158, 209, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .profile-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .profile-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-form {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .profile-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(3, 158, 209, 0.1);
+        }
+
+        .form-group input:disabled {
+            background: #f8f9fa;
+            color: #666;
+            border-color: #e9ecef;
+        }
+
+        .btn {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(3, 158, 209, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(3, 158, 209, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            font-weight: 500;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Password Toggle Styles */
+        .password-input-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: color 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+            background: rgba(3, 158, 209, 0.1);
+        }
+
+        .password-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(3, 158, 209, 0.3);
+        }
+
+        /* Adjust input padding to make room for toggle button */
+        .password-input-wrapper input {
+            padding-right: 45px !important;
+        }
+
+        /* ==================== */
+        /* REDESIGNED MOBILE FOOTER - Enhanced */
+        /* ==================== */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 1;
+            max-width: 70px;
+            padding: 5px 0;
+        }
+        
+        .footer-link i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-link span {
+            font-size: 0.65rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.1;
+        }
+        
+        .footer-link.active,
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-link.active i,
+        .footer-link:hover i {
+            transform: scale(1.1);
+        }
+        
+        .footer-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            width: 5px;
+            height: 5px;
+            background: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            position: fixed;
+            bottom: 70px;
+            left: 10px;
+            right: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            z-index: 1001;
+            display: none;
+        }
+
+        .mobile-dropdown.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        .mobile-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .mobile-dropdown-item:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .mobile-dropdown-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .mobile-dropdown-item span {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Hide header on tablet and mobile */
+        @media (max-width: 992px) {
+            header {
+                display: none;
+            }
+            
+            .profile-content {
+                padding: 20px 15px 100px 15px;
+            }
+        }
+
+        /* Adjust for very small screens */
+        @media (max-width: 576px) {
+            .mobile-footer {
+                padding: 10px 0;
+            }
+            
+            .footer-link {
+                max-width: 65px;
+            }
+            
+            .footer-link i {
+                font-size: 1.1rem;
+            }
+            
+            .footer-link span {
+                font-size: 0.6rem;
+            }
+            
+            .profile-header {
+                padding: 20px;
+            }
+            
+            .profile-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .profile-header p {
+                font-size: 0.9rem;
+            }
+            
+            .profile-form {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-content {
+                padding: 15px 10px 90px 10px;
+            }
+            
+            .profile-header {
+                padding: 20px;
+            }
+            
+            .profile-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .profile-header p {
+                font-size: 0.85rem;
+            }
+            
+            .profile-form {
+                padding: 15px;
+            }
+        }
+        
+        /* Show header only on desktop */
+        @media (min-width: 993px) {
+            .mobile-footer {
+                display: none;
+            }
+        }
+        
+        /* Animation for footer appearance */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .mobile-footer {
+            animation: slideUp 0.5s ease;
+        }
+
+        /* Header responsive adjustments */
+        @media (max-width: 1200px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            nav a {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            nav {
+                gap: 5px;
+                flex-wrap: wrap;
+                    justify-content: flex-end;
+            }
+            
+            nav a {
+                font-size: 12px;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header - Hidden on tablet/mobile -->
+    <header>
+        <div class="logo-container">
+            <img src="../assets/logo.png" alt="WaterBill NG">
+            <h1>WaterBill NG</h1>
+        </div>
+        
+        <button class="hamburger" id="menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a>
+            <a href="history.html"><i class="fas fa-history"></i> History</a>
+            <a href="../includes/communityperformance.php"><i class="fas fa-chart-line"></i> Performance</a>
+            <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            <a href="#" onclick="logout()" style="color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="payment.html"><i class="fas fa-credit-card"></i> Make Payment</a>
+        <a href="history.html"><i class="fas fa-history"></i> Payment History</a>
+        <a href="../includes/communityperformance.php"><i class="fas fa-chart-line"></i> Community Performance</a>
+        <a href="report-fault.html"><i class="fas fa-exclamation-triangle"></i> Report Fault</a>
+        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+        <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Profile Content -->
+    <div class="profile-content">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+            <p>Update your personal information and account settings</p>
+        </div>
+
+        <div class="profile-form">
+            <div id="alert-container"></div>
+            
+            <form id="profile-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="middle_name">Middle Name</label>
+                        <input type="text" id="middle_name" name="middle_name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="surname">Surname</label>
+                        <input type="text" id="surname" name="surname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="flat_no">Flat Number</label>
+                        <input type="text" id="flat_no" name="flat_no" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" required maxlength="11">
+                </div>
+
+                <div class="form-group">
+                    <label for="current_password">Current Password (required only if changing password)</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="current_password" name="current_password">
+                        <button type="button" class="password-toggle" data-target="current_password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new_password">New Password (optional)</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
+                            <button type="button" class="password-toggle" data-target="new_password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                            <button type="button" class="password-toggle" data-target="confirm_password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="update-btn">Update Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- REDESIGNED MOBILE FOOTER - Primary Navigation -->
+    <!-- ==================== -->
+    <footer class="mobile-footer" role="navigation" aria-label="Primary">
+        <a href="dashboard.html" class="footer-link">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="payment.html" class="footer-link">
+            <i class="fas fa-wallet"></i>
+            <span>Payments</span>
+        </a>
+        <a href="history.html" class="footer-link">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="../includes/communityperformance.php" class="footer-link">
+            <i class="fas fa-chart-line"></i>
+            <span>Performance</span>
+        </a>
+        <a href="#" class="footer-link" id="more-menu">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+        </a>
+    </footer>
+
+    <!-- Mobile Dropdown Menu -->
+    <div class="mobile-dropdown" id="mobile-dropdown">
+        <a href="profile.html" class="mobile-dropdown-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+        <a href="report-fault.html" class="mobile-dropdown-item">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Report Fault</span>
+        </a>
+        <a href="notifications.html" class="mobile-dropdown-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="#" class="mobile-dropdown-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+    <!-- ==================== -->
+    <!-- END REDESIGNED MOBILE FOOTER -->
+    <!-- ==================== -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Page loaded - starting initialization');
+            
+            try {
+                // Check authentication first
+                await checkAuth();
+                console.log('Auth successful - loading profile');
+                
+                // Load profile data with debug
+                await loadProfile();
+                
+                // Setup UI components
+                setupForm();
+                setupPasswordToggles();
+                setupSidebar();
+                setupMobileMenu();
+                console.log('Profile page initialized successfully');
+                
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                showAlert('Page initialization failed: ' + error.message, 'error');
+            }
+        });
+
+        // Setup mobile dropdown menu
+        function setupMobileMenu() {
+            const moreMenu = document.getElementById('more-menu');
+            const dropdown = document.getElementById('mobile-dropdown');
+            const overlay = document.getElementById('overlay');
+
+            if (moreMenu && dropdown) {
+                moreMenu.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('show');
+                    
+                    if (overlay) {
+                        if (dropdown.classList.contains('show')) {
+                            overlay.classList.add('show');
+                        } else {
+                            overlay.classList.remove('show');
+                        }
+                    }
+                });
+
+                // Close dropdown when clicking overlay
+                if (overlay) {
+                    overlay.addEventListener('click', function() {
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                    });
+                }
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!moreMenu.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        if (overlay) {
+                            overlay.classList.remove('show');
+                        }
+                    }
+                });
+            }
+        }
+
+        function setupPasswordToggles() {
+            console.log('Setting up password toggles...');
+            
+            const toggleButtons = document.querySelectorAll('.password-toggle');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const passwordInput = document.getElementById(targetId);
+                    const icon = this.querySelector('i');
+                    
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                        this.setAttribute('aria-label', 'Hide password');
+                    } else {
+                        passwordInput.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                        this.setAttribute('aria-label', 'Show password');
+                    }
+                    
+                    // Focus back on the input for better UX
+                    passwordInput.focus();
+                });
+                
+                // Add keyboard support
+                button.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            console.log('Password toggles setup completed');
+        }
+
+        function resetPasswordToggles() {
+            const toggleIcons = document.querySelectorAll('.password-toggle i');
+            toggleIcons.forEach(icon => {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            });
+            
+            // Reset input types to password
+            const passwordInputs = document.querySelectorAll('.password-input-wrapper input[type="text"]');
+            passwordInputs.forEach(input => {
+                input.type = 'password';
+            });
+        }
+
+        async function checkAuth() {
+            console.log('Checking authentication...');
+            try {
+                const response = await fetch('../../api/auth/check-session.php', { 
+                    credentials: 'include' 
+                });
+                console.log('Auth response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Auth failed with status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Auth result:', result);
+                
+                if (!result.authenticated) {
+                    console.log('Not authenticated - redirecting to login');
+                    window.location.href = '../auth/login.html';
+                    return;
+                }
+                
+                console.log('Authentication successful');
+                return result;
+                
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '../auth/login.html';
+            }
+        }
+
+        async function loadProfile() {
+            console.log('=== LOAD PROFILE DEBUG ===');
+            console.log('Loading profile data from: ../../api/user/profile-data.php');
+            
+            try {
+                const response = await fetch('../../api/user/profile-data.php', { 
+                    credentials: 'include' 
+                });
+                
+                console.log('🔍 Profile API Response Status:', response.status);
+                console.log('🔍 Profile API Response OK:', response.ok);
+                
+                // Get raw response text first for debugging
+                const responseText = await response.text();
+                console.log('🔍 Raw Response Text:', responseText);
+                
+                // Try to parse as JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                    console.log('🔍 Parsed JSON Data:', data);
+                } catch (parseError) {
+                    console.error('❌ JSON Parse Error:', parseError);
+                    console.error('❌ Response that failed to parse:', responseText);
+                    throw new Error('Invalid response from server - not valid JSON');
+                }
+                
+                if (!response.ok) {
+                    // Server returned error status
+                    throw new Error(data.message || `Server error: ${response.status}`);
+                }
+                
+                if (data.success) {
+                    console.log('✅ Profile data loaded successfully');
+                    console.log('🔍 Available data keys:', Object.keys(data));
+                    console.log('🔍 Profile data structure:', data.data);
+                    
+                    // Populate form - using data.data (the actual user data)
+                    const profile = data.data;
+                    document.getElementById('first_name').value = profile.first_name || '';
+                    document.getElementById('middle_name').value = profile.middle_name || '';
+                    document.getElementById('surname').value = profile.surname || '';
+                    document.getElementById('flat_no').value = profile.flat_no || '';
+                    document.getElementById('username').value = profile.username || '';
+                    document.getElementById('email').value = profile.email || '';
+                    document.getElementById('phone').value = profile.phone || '';
+                    
+                    console.log('✅ Profile form populated successfully');
+                } else {
+                    console.error('❌ Profile API returned error:', data.message);
+                    throw new Error(data.message || 'Failed to load profile data');
+                }
+                
+            } catch (error) {
+                console.error('❌ Load profile failed:', error);
+                showAlert('Failed to load profile data: ' + error.message, 'error');
+                throw error; // Re-throw to stop further execution
+            }
+        }
+
+        function setupForm() {
+            console.log('Setting up form...');
+            const form = document.getElementById('profile-form');
+            if (!form) {
+                console.error('Form element not found!');
+                return;
+            }
+
+            const newPassword = document.getElementById('new_password');
+            const confirmPassword = document.getElementById('confirm_password');
+            const currentPassword = document.getElementById('current_password');
+
+            function validatePasswords() {
+                const newPass = newPassword.value.trim();
+                const confirmPass = confirmPassword.value.trim();
+                const currentPass = currentPassword.value.trim();
+                
+                // Only validate passwords if user is trying to change password
+                if (newPass || confirmPass) {
+                    if (!currentPass) {
+                        currentPassword.setCustomValidity('Current password is required to change password');
+                        return false;
+                    }
+                    
+                    if (newPass && confirmPass && newPass !== confirmPass) {
+                        confirmPassword.setCustomValidity('Passwords do not match');
+                        return false;
+                    } else if (newPass && newPass.length < 6) {
+                        newPassword.setCustomValidity('Password must be at least 6 characters');
+                        return false;
+                    } else {
+                        newPassword.setCustomValidity('');
+                        confirmPassword.setCustomValidity('');
+                        currentPassword.setCustomValidity('');
+                        return true;
+                    }
+                }
+                
+                // If no password change, clear any validation messages
+                newPassword.setCustomValidity('');
+                confirmPassword.setCustomValidity('');
+                currentPassword.setCustomValidity('');
+                return true;
+            }
+
+            if (newPassword && confirmPassword && currentPassword) {
+                newPassword.addEventListener('input', validatePasswords);
+                confirmPassword.addEventListener('input', validatePasswords);
+                currentPassword.addEventListener('input', validatePasswords);
+            }
+
+            const phone = document.getElementById('phone');
+            if (phone) {
+                phone.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^\d]/g, '').slice(0, 11);
+                });
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                console.log('Form submitted');
+                
+                if (!validatePasswords()) {
+                    showAlert('Please fix password errors', 'error');
+                    return;
+                }
+
+                const updateBtn = document.getElementById('update-btn');
+                const originalText = updateBtn.textContent;
+                updateBtn.disabled = true;
+                updateBtn.textContent = 'Updating...';
+                
+                try {
+                    const formData = new FormData(this);
+                    const jsonData = {};
+                    for (const [key, value] of formData.entries()) {
+                        jsonData[key] = value;
+                    }
+                    
+                    console.log('Sending update request:', jsonData);
+                    
+                    const response = await fetch('../../api/user/update-profile.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(jsonData),
+                        credentials: 'include'
+                    });
+                    
+                    console.log('Update response status:', response.status);
+                    const result = await response.json();
+                    console.log('Update result:', result);
+                    
+                    if (result.success) {
+                        showAlert(result.message, 'success');
+                        // Only clear password fields if password was changed
+                        if (jsonData.new_password) {
+                            document.getElementById('current_password').value = '';
+                            document.getElementById('new_password').value = '';
+                            document.getElementById('confirm_password').value = '';
+                            
+                            // Reset toggle icons to eye (hidden) state
+                            resetPasswordToggles();
+                        }
+                        // Reload profile to get any updated data
+                        await loadProfile();
+                    } else {
+                        showAlert(result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Update failed:', error);
+                    showAlert('Update failed. Please try again.', 'error');
+                }
+                
+                updateBtn.disabled = false;
+                updateBtn.textContent = originalText;
+            });
+            
+            console.log('Form setup completed');
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            if (container) {
+                container.innerHTML = `<div class="alert ${type}">${message}</div>`;
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            } else {
+                // Fallback if container doesn't exist
+                alert(message);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('../../api/auth/logout.php', { 
+                    method: 'POST', 
+                    credentials: 'include' 
+                });
+                window.location.href = '../auth/login.html';
+            } catch (error) {
+                console.error('Logout failed:', error);
+                window.location.href = '../auth/login.html';
+            }
+        }
+
+        function setupSidebar() {
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (menuBtn && sidebar && overlay) {
+                menuBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('show');
+                    overlay.classList.toggle('show');
+                });
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+                console.log('Sidebar setup completed');
+            } else {
+                console.warn('Sidebar elements not found');
+            }
+        }
+    </script>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

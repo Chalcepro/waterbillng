@@ -1,0 +1,18 @@
+<style>
+  /* Admin Footer Shared Styles */
+  .admin-footer {
+    background: #0f1630;
+    color: #c6d3ff;
+    padding: 16px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .admin-footer a { color: #8fb1ff; text-decoration: none; }
+  .admin-footer a:hover { text-decoration: underline; }
+</style>
+<footer class="admin-footer">
+  <div>© <span id="footerYear"></span> WaterBill NG • <a href="#">Privacy</a> • <a href="#">Terms</a> • <a href="#">Support</a></div>
+</footer>
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+</script>

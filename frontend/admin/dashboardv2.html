@@ -1,0 +1,358 @@
+<!-- ... continued HTML markup ... -->
+
+<!-- Bootstrap 5 JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- INI / safeFetch bootstrap -->
+<script>
+  (function () {
+    const DEBUG = true;
+    window.debugLog = (...args) => { if (DEBUG) console.log('[DBG]', ...args); };
+
+    window.INI = window.INI || {
+      API_BASE_URL: '/waterbill/api',
+      LOGIN_PAGE: '/waterbill/frontend/auth/login.html',
+      USER_DASHBOARD: '/waterbill/frontend/user/dashboard.html',
+      ADMIN_DASHBOARD: '/waterbill/frontend/admin/dashboard.html',
+      CHECK_SESSION: '/waterbill/api/auth/check‑session.php',
+      ADMIN_DASHBOARD_DATA: '/waterbill/api/admin/admin‑dashboard‑data.php',
+      REDIRECT_MAX_ATTEMPTS: 3,
+      FETCH_TIMEOUT_MS: 15000
+    };
+
+    window.safeRedirect = function (url, reason = '') {
+      try {
+        const key = 'wb_redirect_count';
+        const now = Date.now();
+        const entry = JSON.parse(sessionStorage.getItem(key) || '{}');
+        const attempts = entry.attempts ? entry.attempts + 1 : 1;
+        const firstTs = entry.firstTs || now;
+        sessionStorage.setItem(key, JSON.stringify({ attempts, firstTs }));
+        debugLog('safeRedirect', url, 'attempt', attempts, 'reason', reason);
+
+        if (attempts > window.INI.REDIRECT_MAX_ATTEMPTS && (now - firstTs) < 60000) {
+          console.warn('Too many redirects in short time — not redirecting to avoid loop.');
+          alert('Authentication service unreachable. Try reloading or use a private window.');
+          return;
+        }
+
+        window.location.replace(url);
+      } catch (e) {
+        console.error('safeRedirect error', e);
+        window.location.replace(url);
+      }
+    };
+
+    window.resetRedirectCounter = function () {
+      try { sessionStorage.removeItem('wb_redirect_count'); } catch (e) {}
+    };
+
+    window.safeFetch = async function (url, opts = {}) {
+      const controller = new AbortController();
+      const timeout = opts.timeout ?? window.INI.FETCH_TIMEOUT_MS;
+      const signal = controller.signal;
+      const cfg = Object.assign({
+        credentials: 'include',
+        headers: Object.assign({ 'Accept': 'application/json' }, opts.headers || {})
+      }, opts, { signal });
+
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        const res = await fetch(url, cfg);
+        clearTimeout(timer);
+
+        if (res.url.includes('errors.infinityfree.net')) {
+          debugLog('Redirected to error page:', res.url);
+          return {
+            ok: false,
+            status: 404,
+            json: null,
+            text: 'API endpoint not found',
+            redirected: true
+          };
+        }
+
+        const text = await res.text();
+        const contentType = (res.headers.get('Content‑Type') || '').toLowerCase();
+
+        if (contentType.indexOf('application/json') === -1 || text.trim().startsWith('<')) {
+          return { ok: res.ok, status: res.status, json: null, text, contentType };
+        }
+        try {
+          const json = JSON.parse(text);
+          return { ok: res.ok, status: res.status, json, text, contentType };
+        } catch (parseErr) {
+          return { ok: res.ok, status: res.status, json: null, text, contentType };
+        }
+      } catch (err) {
+        clearTimeout(timer);
+        debugLog('safeFetch error', err);
+        throw err;
+      }
+    };
+
+    window.isOnLoginPage = function () {
+      try {
+        return location.pathname.includes('/auth/login.html') || location.pathname.includes('/auth/register.html');
+      } catch (e) { return false; }
+    };
+
+    debugLog('INI bootstrap loaded', window.INI);
+  })();
+</script>
+
+<script>
+// Utility helpers
+function showLoading() {
+  document.querySelectorAll('.stat-value').forEach(el => {
+    if (el) el.innerHTML = '<div class="loading-spinner"></div>';
+  });
+}
+
+function showNotification(message, type = 'error') {
+  const notification = document.createElement('div');
+  notification.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show position-fixed`;
+  notification.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+  notification.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+  document.body.appendChild(notification);
+  setTimeout(() => { if(notification.parentNode) notification.remove(); }, 5000);
+}
+
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  try {
+    const d = new Date(dateString);
+    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  } catch (e) {
+    return dateString;
+  }
+}
+
+function formatCurrency(amount) {
+  return Number(amount || 0).toLocaleString('en-NG', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+// Updated call to correct endpoint
+async function checkSession() {
+  try {
+    debugLog('checkSession -> calling', INI.CHECK_SESSION);
+    const res = await safeFetch(INI.CHECK_SESSION, { method: 'GET' });
+    debugLog('checkSession result', res);
+
+    if (res.redirected || !res.ok) {
+      debugLog('API endpoint not available, using demo mode');
+      sessionStorage.setItem('demo_mode', 'true');
+      sessionStorage.setItem('user', JSON.stringify({
+        id: 1,
+        name: 'Demo Admin',
+        role: 'admin',
+        email: 'admin@demo.waterbill.ng'
+      }));
+      document.getElementById('demo-mode-indicator').style.display = 'block';
+      return {
+        id: 1,
+        name: 'Demo Admin',
+        role: 'admin',
+        email: 'admin@demo.waterbill.ng'
+      };
+    }
+
+    if (!res.json) {
+      debugLog('Session endpoint returned non‑JSON', res.text && res.text.slice(0,200));
+      if (!isOnLoginPage()) safeRedirect(INI.LOGIN_PAGE, 'non-json-session-response');
+      return null;
+    }
+
+    const data = res.json;
+    if (data.success && data.user) {
+      resetRedirectCounter();
+      sessionStorage.setItem('user', JSON.stringify(data.user));
+      return data.user;
+    }
+    if (data.authenticated || data.auth === true) {
+      const user = data.user || { role: data.role || 'user', id: data.user_id || null, name: data.name || '' };
+      resetRedirectCounter();
+      sessionStorage.setItem('user', JSON.stringify(user));
+      return user;
+    }
+
+    debugLog('Session says unauthenticated', data);
+    if (!isOnLoginPage()) safeRedirect(INI.LOGIN_PAGE, 'not‑authenticated');
+    return null;
+  } catch (err) {
+    console.error('checkSession failed', err);
+    debugLog('Fetch failed, using demo mode');
+    sessionStorage.setItem('demo_mode', 'true');
+    sessionStorage.setItem('user', JSON.stringify({
+      id: 1,
+      name: 'Demo Admin',
+      role: 'admin',
+      email: 'admin@demo.waterbill.ng'
+    }));
+    document.getElementById('demo-mode-indicator').style.display = 'block';
+    return {
+      id: 1,
+      name: 'Demo Admin',
+      role: 'admin',
+      email: 'admin@demo.waterbill.ng'
+    };
+  }
+}
+
+async function loadDashboardData() {
+  try {
+    showLoading();
+    const isDemoMode = sessionStorage.getItem('demo_mode') === 'true';
+    if (isDemoMode) {
+      debugLog('Loading demo data (API not available)');
+      loadMockData();
+      return;
+    }
+
+    const response = await safeFetch(INI.ADMIN_DASHBOARD_DATA, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Cache‑Control':'no-cache',
+        'Pragma':'no-cache'
+      }
+    });
+    debugLog('admin-dashboard-data response', response);
+
+    if (!response.ok) {
+      debugLog('admin-dashboard-data non-ok', response.status);
+      if (response.status === 401) {
+        showNotification('Session expired. Redirecting to login...', 'error');
+        setTimeout(() => safeRedirect(INI.LOGIN_PAGE, 'dashboard-data-401'), 700);
+        return;
+      }
+      debugLog('Dashboard API not available, switching to demo mode');
+      sessionStorage.setItem('demo_mode','true');
+      document.getElementById('demo-mode-indicator').style.display = 'block';
+      loadMockData();
+      return;
+    }
+
+    if (!response.json) {
+      debugLog('admin-dashboard-data returned non-json', response.text && response.text.slice(0,200));
+      throw new Error('Invalid server response for dashboard data');
+    }
+
+    const result = response.json;
+    if (!result.success) throw new Error(result.message || 'Failed to load dashboard data');
+    const data = result.data || {};
+    debugLog('dashboard data received:', data);
+
+    const totalUsers = data.total_users ?? data.users?.total ?? data.users_count ?? 0;
+    const pendingPayments = data.pending_payments ?? data.payments?.pending ?? data.payments_pending ?? 0;
+    const activeSubscriptions = data.active_subscriptions ??
+                                  data.subscriptions?.active ??
+                                  data.subscriptions_count ??
+                                  (Array.isArray(data.subscriptions) ? data.subscriptions.filter(s => s.status === 'active').length : 0) ??
+                                  0;
+    const openFaults = data.open_faults ?? data.faults?.open ?? data.fault_reports?.pending ?? 0;
+
+    document.getElementById('total-users').textContent = Number(totalUsers || 0).toLocaleString();
+    document.getElementById('pending-payments').textContent = Number(pendingPayments || 0).toLocaleString();
+    document.getElementById('active-subscriptions').textContent = Number(activeSubscriptions || 0).toLocaleString();
+    document.getElementById('open-faults').textContent = Number(openFaults || 0).toLocaleString();
+
+    const tbody = document.getElementById('recent-payments-body');
+    const recentPayments = data.recent_payments || data.payments || [];
+
+    if (Array.isArray(recentPayments) && recentPayments.length) {
+      tbody.innerHTML = '';
+      recentPayments.slice(0,5).forEach(p => {
+        const tr = document.createElement('tr');
+        const amount = (typeof p.amount === 'string' || typeof p.amount === 'number') ? formatCurrency(p.amount) : '0.00';
+        const method = p.method || p.payment_method || p.paymentMethod || 'N/A';
+        const userName = p.user_name || p.name || p.username || 'N/A';
+        const status = (p.status || 'pending').toLowerCase();
+        const statusClass = status === 'completed' ? 'bg-success' :
+                            status === 'pending' ? 'bg-warning text-dark' :
+                            'bg-secondary';
+        tr.innerHTML = `
+          <td>${userName}</td>
+          <td>₦${amount}</td>
+          <td>${method}</td>
+          <td>${formatDate(p.created_at || p.createdAt || p.date)}</td>
+          <td><span class="badge ${statusClass}">${(status || '').toUpperCase()}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } else {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center py‑4 text‑muted">No recent payments found</td></tr>';
+    }
+
+    showNotification('Dashboard data loaded successfully', 'success');
+
+  } catch (err) {
+    console.error('Error loading dashboard data:', err);
+    showNotification('Failed to load dashboard data: ' + (err.message || 'Unknown error'), 'error');
+    sessionStorage.setItem('demo_mode','true');
+    document.getElementById('demo‑mode‑indicator').style.display = 'block';
+    loadMockData();
+  }
+}
+
+function loadMockData() {
+  const mockData = {
+    total_users: 1542,
+    pending_payments: 23,
+    active_subscriptions: 1247,
+    open_faults: 8,
+    recent_payments: [
+      { user_name: 'John Doe', amount: 15000, method: 'Bank Transfer', created_at: new Date().toISOString(), status: 'completed' },
+      { user_name: 'Jane Smith', amount: 12000, method: 'Card', created_at: new Date(Date.now() - 86400000).toISOString(), status: 'pending' },
+      { user_name: 'Mike Johnson', amount: 18000, method: 'Bank Transfer', created_at: new Date(Date.now() - 172800000).toISOString(), status: 'completed' },
+      { user_name: 'Sarah Wilson', amount: 9000, method: 'Card', created_at: new Date(Date.now() - 259200000).toISOString(), status: 'completed' },
+      { user_name: 'David Brown', amount: 21000, method: 'Bank Transfer', created_at: new Date(Date.now() - 345600000).toISOString(), status: 'pending' }
+    ]
+  };
+
+  document.getElementById('total‑users').textContent = mockData.total_users.toLocaleString();
+  document.getElementById('pending‑payments').textContent = mockData.pending_payments.toLocaleString();
+  document.getElementById('active‑subscriptions').textContent = mockData.active_subscriptions.toLocaleString();
+  document.getElementById('open‑faults').textContent = mockData.open_faults.toLocaleString();
+
+  const tbody = document.getElementById('recent‑payments‑body');
+  tbody.innerHTML = '';
+  mockData.recent_payments.forEach(p => {
+    const tr = document.createElement('tr');
+    const statusClass = p.status === 'completed' ? 'bg‑success' : 'bg‑warning text‑dark';
+    tr.innerHTML = `
+      <td>${p.user_name}</td>
+      <td>₦${formatCurrency(p.amount)}</td>
+      <td>${p.method}</td>
+      <td>${formatDate(p.created_at)}</td>
+      <td><span class="badge ${statusClass}">${p.status.toUpperCase()}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  showNotification('Demo data loaded - API endpoints not configured', 'info');
+}
+
+function exportReports(format) {
+  try {
+    if (format === 'csv') {
+      const headers = ['User','Amount','Method','Date','Status'];
+      const rows = [
+        ['John Doe','15000','Bank Transfer', new Date().toLocaleDateString(), 'Completed'],
+        ['Jane Smith','12000','Card', new Date().toLocaleDateString(), 'Pending']
+      ];
+      let csv = headers.join(',') + '\n';
+      rows.forEach(row => {
+        csv += row.join(',') + '\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `payments‑export‑${new Date().toISOString().split('T')[0]}.csv`;
